@@ -349,5 +349,11 @@
     $('.sidebar-menu').tree()
   })
 </script>
+<script>
+    $(function () {
+        $("#example2").DataTable();
+    });
+</script>
+
 </body>
 </html>

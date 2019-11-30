@@ -10,13 +10,13 @@
     <li class="active">File management</li>
 </ol>
 
-<div class="box">
+<div class="box box-primary">
     <div class="box-header">
         <h3 class="box-title">Files Listing</h3>
     </div>
     <!-- /.box-header -->
     <div class="box-body">
-        <div id="example11" class="table table-bordered table-striped">
+        <div id="example1" class="table table-bordered table-striped">
             <div class="row">
                 <div class="col-sm-6"></div>
                 <div class="col-sm-6"></div>
@@ -82,39 +82,8 @@
                     </table>
                 </div>
             </div>
-            <div class="row">
-                <div class="col-sm-5">
-                    <div class="dataTables_info" id="example2_info" role="status" aria-live="polite">Showing 1 to 10 of 57 entries</div>
-                </div>
-                <div class="col-sm-7">
-                    <div class="dataTables_paginate paging_simple_numbers" id="example2_paginate">
-                        <ul class="pagination">
-                            <li class="paginate_button previous disabled" id="example2_previous"><a href="#" aria-controls="example2" data-dt-idx="0" tabindex="0">Previous</a></li>
-                            <li class="paginate_button active"><a href="#" aria-controls="example2" data-dt-idx="1" tabindex="0">1</a></li>
-                            <li class="paginate_button "><a href="#" aria-controls="example2" data-dt-idx="2" tabindex="0">2</a></li>
-                            <li class="paginate_button "><a href="#" aria-controls="example2" data-dt-idx="3" tabindex="0">3</a></li>
-                            <li class="paginate_button next" id="example2_next"><a href="#" aria-controls="example2" data-dt-idx="7" tabindex="0">Next</a></li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
         </div>
     </div>
     <!-- /.box-body -->
-
-
-<script>
-  $(function () {
-    $('#example1').DataTable()
-    $('#example2').DataTable({
-      'paging'      : true,
-      'lengthChange': false,
-      'searching'   : false,
-      'ordering'    : true,
-      'info'        : true,
-      'autoWidth'   : false
-    })
-  })
-</script>
 
 @endsection
