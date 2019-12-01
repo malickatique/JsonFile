@@ -2,18 +2,6 @@
 
 @section('content')
 
-  <h2>
-    Profile
-    <small></small>
-  </h1>
-  <ol class="breadcrumb">
-    <li><a href="{{ route('user.home') }}"><i class="fa fa-dashboard"></i> Home</a></li>
-    <li class="active">Profile</li>
-  </ol>
-  
-
-<!-- Main content -->
-
 @if($errors->any())
 <div class="container">
     <div class="row">
@@ -31,21 +19,21 @@
 </div>
 @endif
 
-<section class="content">
+<div class="container bootstrap snippet box box-primary">
+    <div class="row">
+  		<div class="col-sm-10"><h1>{{ Auth::user()->name }}</h1></div>
+    	<!-- <div class="col-sm-2"><a href="/users" class="pull-right"><img title="profile image" class="img-circle img-responsive" src="http://www.gravatar.com/avatar/28fd20ccec6865e2d5f0e1f4446eb7bf?s=100"></a></div> -->
+    </div>
+    <div class="row">
+  		<div class="col-sm-3"><!--left col-->   
 
-<div class="row">
-        <div class="col-md-3">
-            <!-- Profile Image -->
-            <div class="box box-primary">
-                <div class="box-body box-profile">
-            
-                    @if( Auth::user()->imageurl != null )
-                        <img class="profile-user-img img-responsive img-circle" width="100px" height="140px" src="{{ asset('img/profile_pic/'.Auth::user()->imageurl) }}" alt="User profile picture">
-                    @else
-                        <img class="profile-user-img img-responsive img-circle" width="100px" height="140px" src="{{ asset('img/profile_pic/user.png') }}" alt="User profile picture">
-                    @endif
-                    <h3 class="profile-username text-center">{{ Auth::user()->name }}</h3>
-                    <form method="POST" action="{{ route('user.profile.pic.update') }}" enctype="multipart/form-data">
+            <div class="text-center">
+                @if( Auth::user()->imageurl != null )
+                    <img src="{{ asset('img/profile_pic/'.Auth::user()->imageurl) }}" class="avatar img-circle img-thumbnail" alt="avatar">
+                @else
+                    <img src="{{ asset('img/profile_pic/user.png') }}" class="user-image" alt="User Image">
+                @endif
+                <form method="POST" action="{{ route('user.profile.pic.update') }}" enctype="multipart/form-data">
                         @csrf
                         <div class="form-group">
                             <label for="exampleInputFile">Change Profile Picture</label>
@@ -53,81 +41,165 @@
                         </div>
                         <input type="submit" class="btn btn-success btn-block" name="submit" value="Update">
                     </form>
-                </div>
-                <!-- /.box-body -->
-            </div>
-        </div>
+                <!-- <input type="file" class="text-center center-block file-upload"> -->
+            </div></hr><br>
 
-    <!-- /.col -->
-    <div class="col-md-9">
-    <div class="nav-tabs-custom">
-        <ul class="nav nav-tabs">
-            <li class="active"><a href="#activity" data-toggle="tab" aria-expanded="true">Change Password</a></li>
-            <li class=""><a href="#changeinfo" data-toggle="tab" aria-expanded="false">User Information</a></li>
-        </ul>
-        <div class="tab-content">
-            <div class="tab-pane active" id="activity">
-                <form class="form-horizontal" method="POST" action="{{ route('user.profile.password.update') }}" enctype="multipart/form-data">
-                    @csrf
-                    <div class="form-group">
-                        <label for="old_password" class="col-sm-2 control-label">Old Password</label>
-                        <div class="col-sm-10">
-                            <input type="password" class="form-control" name="old_password" id="old_password" required placeholder="Old Password">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="new_password" class="col-sm-2 control-label">New Password</label>
-                        <div class="col-sm-10">
-                            <input type="password" class="form-control" name="new_password" id="new_password" required placeholder="New Password">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="retype_password" class="col-sm-2 control-label">Retype Password</label>
-                        <div class="col-sm-10">
-                            <input type="password" class="form-control" name="retype_password" id="retype_password" required placeholder="Retype Password">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <div class="col-sm-2"></div>
-                        <div class="col-sm-10">
-                            <input type="submit" class="btn btn-success" value="Change Password">
-                        </div>
-                    </div>
-                </form>
+               
+          <div class="panel panel-default">
+            <div class="panel-heading">Website <i class="fa fa-link fa-1x"></i></div>
+            <div class="panel-body"><a href="#">abcc</a></div>
+          </div>
+          
+          
+          <ul class="list-group">
+            <li class="list-group-item text-muted">Activity <i class="fa fa-dashboard fa-1x"></i></li>
+            <li class="list-group-item text-right"><span class="pull-left"><strong>Shares</strong></span> 125</li>
+            <li class="list-group-item text-right"><span class="pull-left"><strong>Likes</strong></span> 13</li>
+            <li class="list-group-item text-right"><span class="pull-left"><strong>Posts</strong></span> 37</li>
+            <li class="list-group-item text-right"><span class="pull-left"><strong>Followers</strong></span> 78</li>
+          </ul> 
+               
+          <div class="panel panel-default">
+            <div class="panel-heading">Social Media</div>
+            <div class="panel-body">
+            	<i class="fa fa-facebook fa-2x"></i> <i class="fa fa-github fa-2x"></i> <i class="fa fa-twitter fa-2x"></i> <i class="fa fa-pinterest fa-2x"></i> <i class="fa fa-google-plus fa-2x"></i>
             </div>
+          </div>
+          
+        </div><!--/col-3-->
+    	<div class="col-sm-9">
+            <ul class="nav nav-tabs">
+                <li class="active"><a data-toggle="tab" href="#info">Change Info</a></li>
+                <li><a data-toggle="tab" href="#pass">Change Password</a></li>
+                <li><a data-toggle="tab" href="#payment">Payment Method</a></li>
+            </ul>
 
-            <div class="tab-pane" id="changeinfo">
-                <form class="form-horizontal" method="POST" action="{{ route('user.profile.info.update') }}" >
+            <div class="tab-content">
+            <div class="tab-pane active" id="info">
+                <hr>
+                  <form class="form" action="{{ route('user.profile.info.update') }}" method="POST" id="registrationForm">
+                        @csrf
+                      <div class="form-group">
+                          <div class="col-xs-6">
+                              <label for="first_name"><h4>Name</h4></label>
+                              <input type="text" class="form-control" name="name" value="{{Auth::user()->name}}" id="first_name" required placeholder="first name">
+                          </div>
+                      </div>
+          
+                      <!-- <div class="form-group">
+                          <div class="col-xs-6">
+                              <label for="phone"><h4>Phone</h4></label>
+                              <input type="text" class="form-control" name="phone" id="phone" required placeholder="enter phone" title="enter your phone number if any.">
+                          </div>
+                      </div>
+          
+                      <div class="form-group">
+                          <div class="col-xs-6">
+                             <label for="mobile"><h4>Mobile</h4></label>
+                              <input type="text" class="form-control" name="mobile" id="mobile" required placeholder="enter mobile number" title="enter your mobile number if any.">
+                          </div>
+                      </div> -->
+
+                      <div class="form-group">    
+                          <div class="col-xs-6">
+                              <label for="email"><h4>Email</h4></label>
+                              <input type="email" class="form-control" name="email" value="{{Auth::user()->email}}" id="email" required placeholder="you@email.com" title="enter your email." disabled>
+                          </div>
+                      </div>
+                      <!-- <div class="form-group">
+                          
+                          <div class="col-xs-6">
+                              <label for="email"><h4>Location</h4></label>
+                              <input type="email" class="form-control" id="location" required placeholder="somewhere" title="enter a location">
+                          </div>
+                      </div> -->
+                      <div class="form-group">
+                           <div class="col-xs-12">
+                                <br>
+                              	<button class="btn btn-lg btn-success" type="submit"><i class="glyphicon glyphicon-ok-sign"></i> Update</button>
+                               	<!-- <button class="btn btn-lg" type="reset"><i class="glyphicon glyphicon-repeat"></i> Reset</button> -->
+                            </div>
+                      </div>
+              	</form>
+              
+              <hr>
+              
+             </div><!--/tab-pane-->
+             <div class="tab-pane" id="pass">    
+               <h2></h2>
+               <hr>
+                  <form class="form" action="{{ route('user.profile.password.update') }}" method="POST" id="registrationForm">
                     @csrf
-                    <div class="form-group">
-                        <label for="inputName" class="col-sm-2 control-label">Name</label>
-                        <div class="col-sm-10">
-                            <input type="text" class="form-control" value="{{ Auth::user()->name }}" name="name" id="name" placeholder="Name">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="email" class="col-sm-2 control-label">Email</label>
-                        <div class="col-sm-10">
-                            <input type="email" name="email" value="{{ Auth::user()->email }}" class="form-control" id="email" placeholder="Email" disabled>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <div class="col-sm-2"></div>
-                        <div class="col-sm-10">
-                            <input type="submit" class="btn btn-success" value="Update">
-                        </div>
-                    </div>
-                </form>
-            </div>
-        </div>
-        <!-- /.tab-content -->
+                    <div class="form-group">      
+                          <div class="col-xs-6">
+                              <label for="password"><h4>Old Password</h4></label>
+                              <input type="password" class="form-control" name="old_password" id="password" required placeholder="password" title="enter your password.">
+                          </div>
+                      </div>
+                      <div class="form-group">
+                          
+                          <div class="col-xs-6">
+                            <label for="password2"><h4>New Password</h4></label>
+                              <input type="password" class="form-control" name="new_password" id="password2" required placeholder="password2" title="enter your password2.">
+                          </div>
+                      </div>
+                      <div class="form-group">
+                          <div class="col-xs-6">
+                            <label for="password2"><h4>Retype Password</h4></label>
+                              <input type="password" class="form-control" name="retype_password" id="password2" required placeholder="password2" title="enter your password2.">
+                          </div>
+                      </div>
+                      <div class="form-group">
+                           <div class="col-xs-12">
+                                <br>
+                              	<button class="btn btn-lg btn-success" type="submit"><i class="glyphicon glyphicon-ok-sign"></i> Update</button>
+                               	<!-- <button class="btn btn-lg" type="reset"><i class="glyphicon glyphicon-repeat"></i> Reset</button> -->
+                            </div>
+                      </div>
+              	</form>
+               
+             </div><!--/tab-pane-->
+             <div class="tab-pane" id="payment">
+                  <hr>
+                  <form class="form" action="##" method="post" id="registrationForm">
+                      <div class="form-group">
+                          
+                          <div class="col-xs-6">
+                              <label for="first_name"><h4>First name</h4></label>
+                              <input type="text" class="form-control" name="first_name" id="first_name" required placeholder="first name" title="enter your first name if any.">
+                          </div>
+                      </div>
+                      <div class="form-group">
+                           <div class="col-xs-12">
+                                <br>
+                              	<button class="btn btn-lg btn-success pull-right" type="submit"><i class="glyphicon glyphicon-ok-sign"></i> Save</button>
+                               	<!--<button class="btn btn-lg" type="reset"><i class="glyphicon glyphicon-repeat"></i> Reset</button>-->
+                            </div>
+                      </div>
+              	</form>
+              </div>
+               
+              </div><!--/tab-pane-->
+          </div><!--/tab-content-->
+
+        </div><!--/col-9-->
+    </div><!--/row-->
+
+
     </div>
-    <!-- /.nav-tabs-custom -->
+    <!-- /.container -->
+  </div>
+  <!-- /.content-wrapper -->
+  <footer class="main-footer">
+    <div class="container">
+      <div class="pull-right hidden-xs">
+        <b>Version</b> 1.0.0
+      </div>
+      <strong>Copyright &copy; 2019-2022 <a href="{{ route('homepage')}}">{{ config('app.name', 'JsonFile') }}</a>.</strong> All rights
+      reserved.
     </div>
-    <!-- /.col -->
+    <!-- /.container -->
+  </footer>
 </div>
-<!-- /.row -->
-</section>
-<!-- /.content -->
 
 @endsection

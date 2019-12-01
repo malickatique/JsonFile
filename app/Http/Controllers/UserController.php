@@ -96,10 +96,44 @@ class UserController extends Controller
     {
         //
     }
+    public function download_file()
+    {
+        if(false)
+        {        
+            return Redirect::back()->withErrors(['msg'=> 'Please method not verified!']);
+        }
+        else
+        {
+            // $price = 130;
+            return Redirect::route('user.home');
+        }
+    }
+    public function payment_verification(Request $request)
+    {
+        if($request->price < 10)
+        {        
+            return Redirect::back()->withErrors(['msg'=> 'Please method not verified!']);
+        }
+        else
+        {
+            // $price = 130;
+            return Redirect::route('user.download');
+        }
+    }
 
     // File uploading to cloud
     public function processFile(Request $request)
     {
+        if($request->file_name->getClientOriginalExtension() != 'json')
+        {        
+            return Redirect::back()->withErrors(['msg'=> 'Please upload a Json file!']);
+        }
+        else
+        {
+            // $price = 130;
+            return Redirect::route('user.payment');
+        }
+
         // Upload file to Cloud/input
         $file_id = $this->uploadToCloudInput($request);
 
