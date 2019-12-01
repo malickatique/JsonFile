@@ -3,16 +3,16 @@
 
 <h2>
     Dashboard
-    <small>File management</small>
+    <small>User management</small>
 </h2>
 <ol class="breadcrumb">
     <li><a href="{{ route('admin.home') }}"><i class="fa fa-dashboard"></i> Home</a></li>
-    <li class="active">File management</li>
+    <li class="active">Users management</li>
 </ol>
 
 <div class="box box-primary">
     <div class="box-header">
-        <h3 class="box-title">Files Listing</h3>
+        <h3 class="box-title">Users Listing</h3>
     </div>
     <!-- /.box-header -->
     <div class="box-body">
@@ -27,31 +27,35 @@
                         <thead>
                             <tr role="row">
                                 <th class="sorting_asc" tabindex="0" aria-controls="example2" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Rendering engine: activate to sort column descending">id#</th>
-                                <th class="sorting" tabindex="0" aria-controls="example2" rowspan="1" colspan="1" aria-label="Browser: activate to sort column ascending">File Name</th>
-                                <th class="sorting" tabindex="0" aria-controls="example2" rowspan="1" colspan="1" aria-label="Platform(s): activate to sort column ascending">File Size</th>
-                                <th class="sorting" tabindex="0" aria-controls="example2" rowspan="1" colspan="1" aria-label="Engine version: activate to sort column ascending">Est. Price</th>
+                                <th class="sorting" tabindex="0" aria-controls="example2" rowspan="1" colspan="1" aria-label="Browser: activate to sort column ascending">Image</th>
+                                <th class="sorting" tabindex="0" aria-controls="example2" rowspan="1" colspan="1" aria-label="Platform(s): activate to sort column ascending">Name</th>
+                                <th class="sorting" tabindex="0" aria-controls="example2" rowspan="1" colspan="1" aria-label="Engine version: activate to sort column ascending">Email</th>
                                 <th class="sorting" tabindex="0" aria-controls="example2" rowspan="1" colspan="1" aria-label="CSS grade: activate to sort column ascending">Status</th>
                                 <th class="sorting" tabindex="0" aria-controls="example2" rowspan="1" colspan="1" aria-label="CSS grade: activate to sort column ascending">Event</th>
                                 <th class="sorting" tabindex="0" aria-controls="example2" rowspan="1" colspan="1" aria-label="CSS grade: activate to sort column ascending" width="120">Action</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach($files as $file)
+                            @foreach($users as $user)
                             <tr role="row" class="odd">
-                                <td class="text-center sorting_1"> {{ $file->id }} </td>
+                                <td class="text-center sorting_1"> {{ $user->id }} </td>
 
                                 <td class="">
-                                    {{ $file->file_name }}
+                                    @if( Auth::user()->imageurl != null )
+                                    <img src="{{ asset('img/profile_pic/'.$user->imageurl) }}" class="img-responsive" style="width:40px;height:40px" alt="User Image">
+                                    @else
+                                    <img src="{{ asset('img/profile_pic/user.png') }}" class="img-responsive" style="width:40px;height:40px" alt="User Image">
+                                    @endif
                                 </td>
 
                                 <td class="text-capitalize">
-                                    {{ $file->file_size }}
+                                    {{ $user->name }}
                                 </td>
                                 <td>
-                                    {{ $file->price }} $
+                                    {{ $user->email }}
                                 </td>
                                 <td class="text-center">
-                                    @if( $file->status == '5' )
+                                    @if( $user->name == '5' )
                                         <small class="label label-success" >Paid</small>
                                     @else
                                         <small class="label label-danger">Not Paid</small>
@@ -73,9 +77,9 @@
                                     <a href="#" data-toggle="tooltip" title="" class="btn btn-default btn-sm" data-original-title="View user info"><i class="fa fa-eye"></i></a>
                                     <!-- <a href="#" data-toggle="tooltip" title="" class="btn btn-default btn-sm" data-original-title="Edit user info"><i class="fa fa-edit"></i></a> -->
 
-                                    <form style="display: -webkit-inline-box;" action="{{ route('del.db.file') }}" method="POST">
+                                    <form style="display: -webkit-inline-box;" action="{{ route('del.user') }}" method="POST">
                                         @csrf
-                                        <input name="file_id" type="hidden" value="{{ $file->id }}">
+                                        <input name="user_id" type="hidden" value="{{ $user->id }}">
                                         <button class="btn btn-default btn-sm" data-toggle="tooltip" title="" type="submit" onclick="return confirm('Are you sure you want to delete this user?');" data-original-title="Delete user"><i class="fa fa-trash"></i></button>
                                     </form>
                                     
@@ -89,5 +93,4 @@
         </div>
     </div>
     <!-- /.box-body -->
-
 @endsection

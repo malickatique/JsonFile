@@ -57,7 +57,7 @@
           <li class="active"><a href="#intro">Home</a></li>
           <li><a href="#about">About Us</a></li>
           <li><a href="#services">Services</a></li>
-          <li><a href="#portfolio">Portfolio</a></li>
+          <!-- <li><a href="#portfolio">Portfolio</a></li> -->
           <li><a href="#team">Team</a></li>
           <!-- <li class="drop-down"><a href="">Drop Down</a>
             <ul>
@@ -86,8 +86,11 @@
             @else
             <a class="" href="{{ route('user.home') }}">
                 <div class="pull-left">
-                  <img src="{{ asset('admin-lte/dist/img/user2-160x160.jpg') }}" class="" alt="User Image" 
-                    style="width:40px; height:40px; border-radius: 100%;">
+                  @if( Auth::user()->imageurl != null )
+                      <img src="{{ asset('img/profile_pic/'.Auth::user()->imageurl) }}" style="width:40px; height:40px; border-radius: 100%;" alt="User Image">
+                  @else
+                      <img src="{{ asset('img/profile_pic/user.png') }}" style="width:40px; height:40px; border-radius: 100%;" alt="User Image">
+                  @endif
                 </div>
             </a>
             @endguest

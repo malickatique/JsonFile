@@ -22,23 +22,11 @@
 }
 </style>
 
-<!-- 
-@if($errors->any())
-<h4> {{ $errors->first() }} </h4>
-@endif -->
-
-<!-- <div class="container">
-    <form method="POST" action="{{ route('processFile') }}" enctype="multipart/form-data">
-        @csrf
-        <input type="file" name="file_name">
-        <button type="submit" class="btn btn-default">Upload to Cloud</button>
-    </form>
-</div> -->
-
 <div class="row">
     <div class="col-md-12">
         <!-- The time line -->
         <ul class="timeline">
+            <a id="upload"></a>
             <!-- timeline time label -->
             <li class="time-label my-4">
                 <span class="bg-blue md-4">
@@ -58,13 +46,13 @@
                         <input type="file" class="btn btn-primary" name="file_name" required>
                     </div>
                     <div class="timeline-footer">
-                        <button type="submit" class="btn btn-primary btn-md">Upload to Cloud</button>
+                        <button type="submit" class="btn btn-primary btn-md"> Process my file </button>
                     </div>
                 </form>
             </li>
             <!-- END timeline item -->
             <!-- timeline item -->
-            @if($errors->any())
+            @if( $errors->file->any() )
                 <li>
                     <i class="fa fa-exclamation-circle bg-red"></i>
                     <div class="timeline-item">
@@ -72,7 +60,7 @@
                         <h3 class="timeline-header"> Error!! </h3>
 
                         <div class="timeline-body">
-                            <h4> {{ $errors->first() }} </h4>
+                            <h4> {{ $errors->file->first() }} </h4>
                         </div>
                         <div class="timeline-footer">
                             <!-- <a class="btn btn-danger btn-flat btn-xs">View comment</a> -->
@@ -82,7 +70,6 @@
                 
             @endif
             <!-- END timeline item -->
-
 
             <!-- Pay for it -->
             <li class="time-label my-4">
@@ -96,35 +83,19 @@
                 <i class="fa fa-dollar bg-gray"></i>
 
                 <div class="timeline-item">
-                    <h3 class="timeline-header"> Payment </h3>
+                    <h3 class="timeline-header"> Check out </h3>
 
                     <div class="timeline-body">
-                        123
+                        <input type="text" disabled>
                     </div>
                 </div>
             </li>
-
-            @if($errors->any())
-                <li>
-                    <i class="fa fa-exclamation-circle bg-red"></i>
-                    <div class="timeline-item">
-
-                        <h3 class="timeline-header"> Error!! </h3>
-
-                        <div class="timeline-body">
-                            <h4> {{ $errors->first() }} </h4>
-                        </div>
-                        <div class="timeline-footer">
-                            <!-- <a class="btn btn-danger btn-flat btn-xs">View comment</a> -->
-                        </div>
-                    </div>
-                </li>
-            @endif
             <!-- END timeline item -->
 
 
             <!-- Download it -->
             <li class="time-label my-4">
+                <a id="download"></a>
                 <span class="bg-gray md-4">
                     3. Download
                 </span>
@@ -135,9 +106,9 @@
                 <i class="fa fa-arrow-circle-down bg-gray"></i>
 
                 <div class="timeline-item">
-
+                <a id="#payment">
                     <h3 class="timeline-header"> Download your file</h3>
-
+                </a>
                     <div class="timeline-body">
                         <img src="http://placehold.it/150x100" alt="..." class="margin">
                     </div>

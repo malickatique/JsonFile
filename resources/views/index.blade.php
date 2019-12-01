@@ -8,9 +8,9 @@
     <div class="container d-flex h-100">
       <div class="row justify-content-center align-self-center">
         <div class="col-md-6 intro-info order-md-first order-last">
-          <h2>Rapid Solutions<br>for Your <span>Business!</span></h2>
+          <h2>Convert Json files<br>with just few <span>Clicks!</span></h2>
           <div>
-            <a href="#about" class="btn-get-started scrollto">Get Started</a>
+            <a href="{{ route('user.convert') }}" class="btn-get-started scrollto">Get Started</a>
           </div>
         </div>
   
@@ -268,7 +268,7 @@
     <!--==========================
       Portfolio Section
     ============================-->
-    <section id="portfolio" class="section-bg">
+    <!-- <section id="portfolio" class="section-bg">
       <div class="container">
 
         <header class="section-header">
@@ -417,7 +417,8 @@
         </div>
 
       </div>
-    </section><!-- #portfolio -->
+    </section> -->
+    <!-- #portfolio -->
 
     <!--==========================
       Clients Section

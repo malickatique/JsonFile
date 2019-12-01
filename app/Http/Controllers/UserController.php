@@ -11,7 +11,10 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
+use Cartalyst\Stripe\Laravel\Facades\Stripe;
+use Cartalyst\Stripe\Exception\CardErrorException;
 use File;
+use PhpParser\Node\Stmt\TryCatch;
 
 class UserController extends Controller
 {
@@ -97,27 +100,45 @@ class UserController extends Controller
         //
     }
     public function download_file()
-    {
-        if(false)
-        {        
-            return Redirect::back()->withErrors(['msg'=> 'Please method not verified!']);
-        }
-        else
-        {
-            // $price = 130;
-            return Redirect::route('user.home');
-        }
+    {   
+        $file_id=1;      
+        $id = Auth::user()->id;
+        $fileInfo = CloudFiles::where('user_id', '=', $id)->where('status', '=', '5')->first();
+        $cloud = CloudSettings::first();
+        $download_url = Storage::disk($cloud->disk_name)->url('output/'.$fileInfo->file_name, $fileInfo->file_name);
+        $file = $fileInfo;
+        $file['download_url'] = $download_url;
+        // dd($file);
+        return view('user.download')->with('file', $file);
     }
     public function payment_verification(Request $request)
     {
-        if($request->price < 10)
-        {        
-            return Redirect::back()->withErrors(['msg'=> 'Please method not verified!']);
-        }
-        else
-        {
-            // $price = 130;
+        // return $request->all();
+        try {
+            //charge user...
+            $charge = Stripe::charges()->create([
+                'amount' => 31,
+                'currency' => 'USD',
+                'source' => $request->stripeToken,
+                'description' => 'Order',
+                'receipt_email' => 'malickateeq@gmail.com',
+                'metadata' => [
+                    //
+                    // 'contents' => 'contentss',
+                    // 'quantity' => 'quantitity'
+                ],
+            ]);
+            
+            // Success 
+            $id = Auth::user()->id;
+            $fileInfo = CloudFiles::where('user_id', '=', $id)->first();
+            $fileInfo->status = '5';
+            $fileInfo->save();
             return Redirect::route('user.download');
+
+        } catch (CardErrorException $e) {
+            dd($e);
+            // return Redirect::back()->withErrors('Payment method not verified!', 'payment');
         }
     }
 
@@ -126,12 +147,7 @@ class UserController extends Controller
     {
         if($request->file_name->getClientOriginalExtension() != 'json')
         {        
-            return Redirect::back()->withErrors(['msg'=> 'Please upload a Json file!']);
-        }
-        else
-        {
-            // $price = 130;
-            return Redirect::route('user.payment');
+            return Redirect::back()->withErrors('Please upload a json file!', 'file');
         }
 
         // Upload file to Cloud/input
@@ -150,8 +166,9 @@ class UserController extends Controller
         $this->uploadToCloudOutput($file_id);
 
         // Generate Download link
-        $this->getDownloadLink($file_id);
 
+        $fileInfo = CloudFiles::find($file_id);
+        return view('user.pay-for-it')->with('fileInfo', $fileInfo);
         
     }
     public function uploadToCloudInput(Request $request)
@@ -287,13 +304,10 @@ class UserController extends Controller
 
         $cloud = CloudSettings::first();
 
-        // To link
-        $headers = array(
-            'Content-Type: application/pdf',
-            );
-        return Storage::disk($cloud->disk_name)->download('output/'.$fileInfo->file_name, $fileInfo->file_name, $headers);
+        $download_url = Storage::disk($cloud->disk_name)->url('output/'.$fileInfo->file_name, $fileInfo->file_name);
 
-        // dd('here');
+        return $download_url;
+
     }
     public function getFileSize($bytes)
     {

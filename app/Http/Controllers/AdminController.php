@@ -181,4 +181,24 @@ class AdminController extends Controller
 
         dd($files);
     }
+    public function user_mgt()
+    {        
+        $users = User::where('id', '>=', 1)->get();
+        
+        return view('admin.user-mgt')->with('users', $users);
+
+        dd($users);
+    }
+    public function del_db_file(Request $request)
+    {
+        $user = User::find($request->id);
+        $user->delete();
+        return Redirect::back();
+    }
+    public function del_user(Request $request)
+    {
+        $user = User::find($request->user_id);
+        $user->delete();
+        return Redirect::back();
+    }
 }

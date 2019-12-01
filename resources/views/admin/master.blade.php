@@ -254,7 +254,7 @@
           </a>
           <ul class="treeview-menu">
             <li><a href="{{ route('file.mgt') }}"><i class="fa fa-file-text-o"></i> File Management </a></li>
-            <li><a href="admin-lte/index2.html"><i class="fa fa-user"></i> Users Management </a></li>
+            <li><a href="{{ route('user.mgt') }}"><i class="fa fa-user"></i> Users Management </a></li>
           </ul>
         </li>
         <li class="treeview">

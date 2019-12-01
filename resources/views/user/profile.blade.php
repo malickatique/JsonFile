@@ -29,7 +29,7 @@
 
             <div class="text-center">
                 @if( Auth::user()->imageurl != null )
-                    <img src="{{ asset('img/profile_pic/'.Auth::user()->imageurl) }}" class="avatar img-circle img-thumbnail" alt="avatar">
+                    <img src="{{ asset('img/profile_pic/'.Auth::user()->imageurl) }}" class="avatar img-circle img-thumbnail" style="width:210px;height:210px" alt="avatar">
                 @else
                     <img src="{{ asset('img/profile_pic/user.png') }}" class="user-image" alt="User Image">
                 @endif
