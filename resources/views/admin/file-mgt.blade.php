@@ -31,7 +31,7 @@
                                 <th class="sorting" tabindex="0" aria-controls="example2" rowspan="1" colspan="1" aria-label="Platform(s): activate to sort column ascending">File Size</th>
                                 <th class="sorting" tabindex="0" aria-controls="example2" rowspan="1" colspan="1" aria-label="Engine version: activate to sort column ascending">Est. Price</th>
                                 <th class="sorting" tabindex="0" aria-controls="example2" rowspan="1" colspan="1" aria-label="CSS grade: activate to sort column ascending">Status</th>
-                                <th class="sorting" tabindex="0" aria-controls="example2" rowspan="1" colspan="1" aria-label="CSS grade: activate to sort column ascending">Event</th>
+                                <!-- <th class="sorting" tabindex="0" aria-controls="example2" rowspan="1" colspan="1" aria-label="CSS grade: activate to sort column ascending">Event</th> -->
                                 <th class="sorting" tabindex="0" aria-controls="example2" rowspan="1" colspan="1" aria-label="CSS grade: activate to sort column ascending" width="120">Action</th>
                             </tr>
                         </thead>
@@ -57,17 +57,16 @@
                                         <small class="label label-danger">Not Paid</small>
                                     @endif
                                 </td>
-                                <td class="text-center">
+                                <!-- <td class="text-center">
                                     <form method="POST" action="#">
                                         @csrf
                                         <input type="hidden" name="user_id" value="1">
                                         <input type="hidden" name="status" value="1">
                                         <button type="submit" data-toggle="tooltip" title="" class="btn btn-default btn-sm" data-original-title="Deactivate user">
-                                            <!-- <i class="fa fa-toggle-off fa-lg"></i> -->
                                             <i class="fa fa-toggle-on fa-lg"></i>
                                         </button>
                                     </form>
-                                </td>
+                                </td> -->
                                 <td width="60" class="text-center">
                                     <a href="#" data-toggle="tooltip" title="" class="btn btn-default btn-sm" data-original-title="View properties."><i class="fa fa-building"></i></a>
                                     <a href="#" data-toggle="tooltip" title="" class="btn btn-default btn-sm" data-original-title="View user info"><i class="fa fa-eye"></i></a>
@@ -76,7 +75,7 @@
                                     <form style="display: -webkit-inline-box;" action="{{ route('del.db.file') }}" method="POST">
                                         @csrf
                                         <input name="file_id" type="hidden" value="{{ $file->id }}">
-                                        <button class="btn btn-default btn-sm" data-toggle="tooltip" title="" type="submit" onclick="return confirm('Are you sure you want to delete this user?');" data-original-title="Delete user"><i class="fa fa-trash"></i></button>
+                                        <button class="btn btn-default btn-sm" data-toggle="tooltip" title="" type="submit" onclick="return confirm('Are you sure you want to delete this record?');" data-original-title="Delete user"><i class="fa fa-trash"></i></button>
                                     </form>
                                     
                                 </td>

@@ -13,7 +13,9 @@ return [
     |
     */
 
+    // To fetch .env variables {{ config('app.variable_name', 'if not found this value') }}
     'name' => env('APP_NAME', 'Laravel'),
+    'DROPBOX_TOKEN' => env('DROPBOX_TOKEN'),
 
     /*
     |--------------------------------------------------------------------------

@@ -36,10 +36,10 @@
     <div id="topbar">
       <div class="container">
         <div class="social-links">
-          <a href="#" class="twitter"><i class="fa fa-twitter"></i></a>
-          <a href="#" class="facebook"><i class="fa fa-facebook"></i></a>
-          <a href="#" class="linkedin"><i class="fa fa-linkedin"></i></a>
-          <a href="#" class="instagram"><i class="fa fa-instagram"></i></a>
+          <a href="{{ $site->site_twitter }}" class="twitter"><i class="fa fa-twitter"></i></a>
+          <a href="{{ $site->site_facebook }}" class="facebook"><i class="fa fa-facebook"></i></a>
+          <a href="{{ $site->site_linkedin }}" class="linkedin"><i class="fa fa-linkedin"></i></a>
+          <a href="{{ $site->site_instagram }}" class="instagram"><i class="fa fa-instagram"></i></a>
         </div>
       </div>
     </div>
@@ -48,7 +48,7 @@
 
       <div class="logo float-left">
         <!-- Uncomment below if you prefer to use an image logo -->
-        <h1 class="text-light"><a href="#intro" class="scrollto"><span>JsonFile</span></a></h1>
+        <h1 class="text-light"><a href="#intro" class="scrollto"><span>{{ $site->site_logo_text }}</span></a></h1>
         <!-- <a href="#header" class="scrollto"><img src="img/logo.png" alt="" class="img-fluid"></a> -->
       </div>
 
@@ -123,14 +123,14 @@
                 <div class="col-sm-6">
 
                   <div class="footer-info">
-                    <h3>Rapid</h3>
-                    <p>Cras fermentum odio eu feugiat lide par naso tierra. Justo eget nada terra videa magna derita valies darta donna mare fermentum iaculis eu non diam phasellus. Scelerisque felis imperdiet proin fermentum leo. Amet volutpat consequat mauris nunc congue.</p>
+                    <h3>{{ $site->site_logo_text }}</h3>
+                    <p>{{ $site->site_about_us }}</p>
                   </div>
 
                   <div class="footer-newsletter">
                     <h4>Our Newsletter</h4>
                     <p>Tamen quem nulla quae legam multos aute sint culpa legam noster magna veniam enim veniam illum dolore legam minim quorum culpa amet magna export quem.</p>
-                    <form action="" method="post">
+                    <form action="#" method="">
                       <input type="email" name="email"><input type="submit"  value="Subscribe">
                     </form>
                   </div>
@@ -141,30 +141,27 @@
                   <div class="footer-links">
                     <h4>Useful Links</h4>
                     <ul>
-                      <li><a href="#">Home</a></li>
-                      <li><a href="#">About us</a></li>
-                      <li><a href="#">Services</a></li>
-                      <li><a href="#">Terms of service</a></li>
-                      <li><a href="#">Privacy policy</a></li>
+                      <li><a href="{{ route('homepage') }}">Home</a></li>
+                      <li><a href="#about">About us</a></li>
+                      <li><a href="#services">Services</a></li>
+                      <li><a href="#faq">Terms of service</a></li>
+                      <li><a href="#faq">Privacy policy</a></li>
                     </ul>
                   </div>
 
                   <div class="footer-links">
                     <h4>Contact Us</h4>
-                    <p>
-                      A108 Adam Street <br>
-                      New York, NY 535022<br>
-                      United States <br>
-                      <strong>Phone:</strong> +1 5589 55488 55<br>
-                      <strong>Email:</strong> info@example.com<br>
+                    <p>{{ $site->site_address }} <br>
+                      <strong>Phone:</strong> {{ $site->site_phone }} <br>
+                      <strong>Email:</strong> {{ $site->site_email }}<br>
                     </p>
                   </div>
 
                   <div class="social-links">
-                    <a href="#" class="twitter"><i class="fa fa-twitter"></i></a>
-                    <a href="#" class="facebook"><i class="fa fa-facebook"></i></a>
-                    <a href="#" class="instagram"><i class="fa fa-instagram"></i></a>
-                    <a href="#" class="linkedin"><i class="fa fa-linkedin"></i></a>
+                    <a href="{{ $site->site_twitter }}" class="twitter"><i class="fa fa-twitter"></i></a>
+                    <a href="{{ $site->site_facebook }}" class="facebook"><i class="fa fa-facebook"></i></a>
+                    <a href="{{ $site->site_instagram }}" class="instagram"><i class="fa fa-instagram"></i></a>
+                    <a href="{{ $site->site_linkedin }}" class="linkedin"><i class="fa fa-linkedin"></i></a>
                   </div>
 
                 </div>
@@ -179,7 +176,7 @@
               
               <h4>Send us a message</h4>
               <p>Eos ipsa est voluptates. Nostrum nam libero ipsa vero. Debitis quasi sit eaque numquam similique commodi harum aut temporibus.</p>
-              <form action="" method="post" role="form" class="contactForm">
+              <form action="#" method="" role="form" class="contactForm">
                 <div class="form-group">
                   <input type="text" name="name" class="form-control" id="name" placeholder="Your Name" data-rule="minlen:4" data-msg="Please enter at least 4 chars" />
                   <div class="validation"></div>
@@ -215,10 +212,10 @@
 
     <div class="container">
       <div class="copyright">
-        &copy; Copyright <strong>JsonFile</strong>. All Rights Reserved
+        &copy; Copyright <strong>{{ $site->site_name }}</strong>. All Rights Reserved
       </div>
       <div class="credits">
-        <a href="#">JsonFile</a>
+        <a href="{{ route('homepage') }}">{{ $site->site_name }}</a>
       </div>
     </div>
   </footer><!-- #footer -->

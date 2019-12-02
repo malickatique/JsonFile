@@ -15,6 +15,7 @@ class CreateCloudSettingsTable extends Migration
     {
         Schema::create('cloud_settings', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->string('service_provider')->nullable();
             $table->string('disk_name');
             $table->string('token')->nullable();
             $table->string('folder')->nullable();
@@ -24,7 +25,8 @@ class CreateCloudSettingsTable extends Migration
         $configuration =[
             [
                 'disk_name' => "dropbox",
-                'token' => "OVR",
+                'service_provider' => "Dropbox",
+                'token' => config('app.DROPBOX_TOKEN', 'no token specified'),
                 'folder' => "user-uploads"
             ],
         ];

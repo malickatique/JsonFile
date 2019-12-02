@@ -31,7 +31,7 @@
                 @if( Auth::user()->imageurl != null )
                     <img src="{{ asset('img/profile_pic/'.Auth::user()->imageurl) }}" class="avatar img-circle img-thumbnail" style="width:210px;height:210px" alt="avatar">
                 @else
-                    <img src="{{ asset('img/profile_pic/user.png') }}" class="user-image" alt="User Image">
+                    <img src="{{ asset('img/profile_pic/user.png') }}" style="width:210px;height:210px"  class="user-image" alt="User Image">
                 @endif
                 <form method="POST" action="{{ route('user.profile.pic.update') }}" enctype="multipart/form-data">
                         @csrf
@@ -47,16 +47,17 @@
                
           <div class="panel panel-default">
             <div class="panel-heading">Website <i class="fa fa-link fa-1x"></i></div>
-            <div class="panel-body"><a href="#">abcc</a></div>
+            <div class="panel-body"><a href="#">{{ Auth::user()->name }}.com</a></div>
           </div>
           
           
           <ul class="list-group">
+              
             <li class="list-group-item text-muted">Activity <i class="fa fa-dashboard fa-1x"></i></li>
-            <li class="list-group-item text-right"><span class="pull-left"><strong>Shares</strong></span> 125</li>
-            <li class="list-group-item text-right"><span class="pull-left"><strong>Likes</strong></span> 13</li>
-            <li class="list-group-item text-right"><span class="pull-left"><strong>Posts</strong></span> 37</li>
-            <li class="list-group-item text-right"><span class="pull-left"><strong>Followers</strong></span> 78</li>
+            <li class="list-group-item text-right"><span class="pull-left"><strong>id</strong></span> {{ Auth::user()->id }}</li>
+            <li class="list-group-item text-right"><span class="pull-left"><strong>Files</strong></span> {{ $info['total_files'] }} </li>
+            <li class="list-group-item text-right"><span class="pull-left"><strong>Spent</strong></span> {{ $info['total_files'] }} </li>
+            <!-- <li class="list-group-item text-right"><span class="pull-left"><strong>Posts</strong></span> 37</li> -->
           </ul> 
                
           <div class="panel panel-default">
@@ -71,7 +72,7 @@
             <ul class="nav nav-tabs">
                 <li class="active"><a data-toggle="tab" href="#info">Change Info</a></li>
                 <li><a data-toggle="tab" href="#pass">Change Password</a></li>
-                <li><a data-toggle="tab" href="#payment">Payment Method</a></li>
+                <!-- <li><a data-toggle="tab" href="#payment">Payment Method</a></li> -->
             </ul>
 
             <div class="tab-content">
@@ -103,7 +104,7 @@
                       <div class="form-group">    
                           <div class="col-xs-6">
                               <label for="email"><h4>Email</h4></label>
-                              <input type="email" class="form-control" name="email" value="{{Auth::user()->email}}" id="email" required placeholder="you@email.com" title="enter your email." disabled>
+                              <input type="email" class="form-control" name="email" value="{{Auth::user()->email}}" id="email" required placeholder="you@email.com" title="enter your email.">
                           </div>
                       </div>
                       <!-- <div class="form-group">
@@ -159,7 +160,7 @@
               	</form>
                
              </div><!--/tab-pane-->
-             <div class="tab-pane" id="payment">
+             <!-- <div class="tab-pane" id="payment">
                   <hr>
                   <form class="form" action="##" method="post" id="registrationForm">
                       <div class="form-group">
@@ -173,11 +174,11 @@
                            <div class="col-xs-12">
                                 <br>
                               	<button class="btn btn-lg btn-success pull-right" type="submit"><i class="glyphicon glyphicon-ok-sign"></i> Save</button>
-                               	<!--<button class="btn btn-lg" type="reset"><i class="glyphicon glyphicon-repeat"></i> Reset</button>-->
+                               	<button class="btn btn-lg" type="reset"><i class="glyphicon glyphicon-repeat"></i> Reset</button>
                             </div>
                       </div>
               	</form>
-              </div>
+              </div>  -->
                
               </div><!--/tab-pane-->
           </div><!--/tab-content-->

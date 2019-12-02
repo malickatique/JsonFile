@@ -15,47 +15,38 @@ class CreateSiteSettingsTable extends Migration
     {
         Schema::create('site_settings', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->string('site_name')->nullable();
+            $table->string('site_logo')->nullable();
+            $table->string('site_logo_text')->nullable();
+            $table->string('site_header_text')->nullable();
+            $table->string('site_header_pic')->nullable();
+            $table->string('site_about_us')->nullable();
+            $table->string('site_address')->nullable();
+            $table->string('site_location')->nullable();
+
+            // Social Media Links
+            $table->string('site_facebook')->default('#');
+            $table->string('site_phone')->default('#');
+            $table->string('site_email')->default('#');
+            $table->string('site_instagram')->default('#');
+            $table->string('site_twitter')->default('#');
+            $table->string('site_linkedin')->default('#');
+
             $table->timestamps();
         });
-        // $configuration =[
-        //     [
-        //         'name' => "name",
-        //         'value' => "OVR",
-        //         'created_at' => date("Y-m-d H:i:s")
-        //     ],
-        //     [
-        //         'name' => "description",
-        //         'value' => "Propert Rental",
-        //         'created_at' => date("Y-m-d H:i:s")
-        //     ],
-        //     [
-        //         'name' => "logo",
-        //         'value' => "",
-        //         'created_at' => date("Y-m-d H:i:s")
-        //     ],
-        //     [
-        //         'name' => "favicon",
-        //         'value' => "",
-        //         'created_at' => date("Y-m-d H:i:s")
-        //     ],
-        //     [
-        //         'name' => "contact_us_email",
-        //         'value' => "info@ovr.com",
-        //         'created_at' => date("Y-m-d H:i:s")
-        //     ],
-        //     [
-        //         'name' => "phone",
-        //         'value' => "111128128",
-        //         'created_at' => date("Y-m-d H:i:s")
-        //     ],
-        //     [
-        //         'name' => "currency",
-        //         'value' => "Dollar",
-        //         'created_at' => date("Y-m-d H:i:s")
-        //     ]
-        // ];
+        $configuration =[
+            [
+                'site_name' => "JsonFiles",
+                'site_header_text' => "Convert Json files with just few Clicks!",
+                'site_address' => "A123 Street, New York, United States",
+                'site_location' => "New York",
+                'site_logo_text' => "JsonFile",
+                'site_header_pic' => "intro-img.svg",
+                'created_at' => date("Y-m-d H:i:s")
+            ],
+        ];
         
-        // DB::table('configurations')->insert($configuration);
+        DB::table('site_settings')->insert($configuration);
     }
 
     /**

@@ -108,7 +108,7 @@
                     <div class="form-group">
                         <label for="email" class="col-sm-2 control-label">Email</label>
                         <div class="col-sm-10">
-                            <input type="email" name="email" value="{{ Auth::user()->email }}" class="form-control" id="email" placeholder="Email" disabled>
+                            <input type="email" name="email" value="{{ Auth::user()->email }}" class="form-control" id="email" placeholder="Email">
                         </div>
                     </div>
                     <div class="form-group">

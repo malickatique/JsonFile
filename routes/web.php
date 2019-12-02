@@ -1,12 +1,11 @@
 <?php
 
-Route::get('/', function () {
-    return view('index');
-})->name('homepage');
+Route::get('/', 'Controller@index')->name('homepage');
 
 Auth::routes();
 
 Route::get('/user-home', 'UserController@index')->name('user.home');
+Route::get('/user-profile', 'UserController@user_profile')->name('user.profile');
 Route::get('/admin-home', 'AdminController@index')->name('admin.home');
 
 // Super Admins Profile
@@ -19,6 +18,25 @@ Route::get('/user-mgt', 'AdminController@user_mgt')->name('user.mgt');
 Route::post('/delete-db-file', 'AdminController@del_db_file')->name('del.db.file');
 Route::post('/delete-user', 'AdminController@del_user')->name('del.user');
 
+
+Route::get('/cloud-settings', 'AdminController@cloud_index')->name('cloud.settings');
+Route::post('/cloud-token', 'AdminController@cloud_token')->name('cloud.token');
+Route::post('/cloud-folder', 'AdminController@cloud_folder')->name('cloud.folder');
+
+Route::get('/site-settings', 'AdminController@site_settings')->name('site.settings');
+Route::post('/site-name', 'AdminController@site_name')->name('site.name');
+Route::post('/site-logo-text', 'AdminController@site_logo_text')->name('site_logo_text');
+Route::post('/site-header-text', 'AdminController@site_header_text')->name('site_header_text');
+Route::post('/site-aboutus-text', 'AdminController@site_about_us')->name('site_about_us');
+Route::post('/site-adderss', 'AdminController@site_address')->name('site_address');
+Route::post('/site-facebook', 'AdminController@site_facebook')->name('site_facebook');
+Route::post('/site-twitter', 'AdminController@site_twitter')->name('site_twitter');
+Route::post('/site-instagram', 'AdminController@site_instagram')->name('site_instagram');
+Route::post('/site-linkedin', 'AdminController@site_linkedin')->name('site_linkedin');
+Route::post('/site-email', 'AdminController@site_email')->name('site_email');
+Route::post('/site-phone', 'AdminController@site_phone')->name('site_phone');
+Route::post('/site-header-pic', 'AdminController@site_header_pic')->name('site_header_pic');
+
 // User Profile
 Route::post('/user-profile-pic-update', 'UserController@profile_pic_update')->name('user.profile.pic.update');
 Route::post('/user-profile-password-update', 'UserController@profile_password_update')->name('user.profile.password.update');
@@ -29,12 +47,9 @@ Route::get('/user-download', 'UserController@download_file')->name('user.downloa
 // Route::get('/file-download', 'UserController@download_file')->name('file.download');
 
 Route::group(['middleware' => ['checkRole:admin']], function () {
-    Route::get('/site-settings', function(){ return view('admin.site-settings'); })->name('site.settings');
-    Route::get('/cloud-settings', function(){ return view('admin.cloud-settings'); })->name('cloud.settings');
     Route::get('/admin-profile', function(){ return view('admin.profile'); })->name('admin.profile');
 });
 Route::group(['middleware' => ['checkRole:user']], function () {
-    Route::get('/user-profile', function(){ return view('user.profile'); })->name('user.profile');
     Route::get('/user-file', function(){ return view('user.convert'); })->name('user.convert');
     Route::get('/user-payment', function(){ return view('user.pay-for-it'); })->name('user.payment');
 });

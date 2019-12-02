@@ -28,10 +28,37 @@ class UserController extends Controller
         //Specify required role for this controller here in checkRole:xyz
         $this->middleware(['auth', 'checkRole:user']); 
     }
+    public function user_profile()
+    {       
+        $id = Auth::user()->id;
+        $files = CloudFiles::where('user_id', '=', $id)->get();
+        $total_spent = 0;
+        foreach ($files as $file) {
+            if($file->status == '5')
+            {
+                $total_spent += $file->price;
+            }
+        }
+        $info['total_files'] = $files->count();
+        $info['total_spent'] = $total_spent;
+        
+        return view('user.profile')->with('info', $info);
+    }
     public function index()
     {
         //
-        return view('user.index');
+        $id = Auth::user()->id;
+        $files = CloudFiles::where('user_id', '=', $id)->get();
+        $total_spent = 0;
+        foreach ($files as $file) {
+            if($file->status == '5')
+            {
+                $total_spent += $file->price;
+            }
+        }
+        $info['total_files'] = $files->count();
+        $info['total_spent'] = $total_spent;
+        return view('user.index')->with('files', $files)->with('info', $info);
     }
 
     /**
@@ -410,15 +437,15 @@ class UserController extends Controller
     }
     public function profile_info_update(Request $request)
     {
+        $id = Auth::user()->id;
         $this->validate($request, [
             'name' => 'required|min:4|max:90',
-            // 'email' => 'required|string|email|max:90|unique:users',
-            // 'retype_password' => 'required|min:6|max:90',
+            'email' => 'required|string|email|max:255|unique:users,email,'.$id,
         ]);
 
-        $admin = User::find(Auth::user()->id);
+        $admin = User::find($id);
         $admin->name = $request->name;
-        // $admin->email = $request->email;
+        $admin->email = $request->email;
         $admin->save();
         return Redirect::back()->withErrors(['msg'=> 'Profile updated successfully!']);
     }
