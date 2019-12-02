@@ -17,6 +17,7 @@ class CreateSiteSettingsTable extends Migration
             $table->bigIncrements('id');
             $table->string('site_name')->nullable();
             $table->string('site_logo')->nullable();
+            $table->string('price_per_mb')->nullable();
             $table->string('site_logo_text')->nullable();
             $table->string('site_header_text')->nullable();
             $table->string('site_header_pic')->nullable();
@@ -37,6 +38,7 @@ class CreateSiteSettingsTable extends Migration
         $configuration =[
             [
                 'site_name' => "JsonFiles",
+                'price_per_mb' => "565",
                 'site_header_text' => "Convert Json files with just few Clicks!",
                 'site_address' => "A123 Street, New York, United States",
                 'site_location' => "New York",
