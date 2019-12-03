@@ -182,7 +182,6 @@ return [
         // Google Drive provider
         App\Providers\GoogleDriveServiceProvider::class,
 
-
     ],
 
     /*

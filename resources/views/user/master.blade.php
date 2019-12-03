@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -22,6 +21,7 @@
   <!-- Stripe -->
   <script src="https://js.stripe.com/v3/"></script>
 
+
   <!-- Google Font -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
 </head>
@@ -43,7 +43,7 @@
         <div class="collapse navbar-collapse pull-left" id="navbar-collapse">
           <ul class="nav navbar-nav">
             <li class=""><a href="{{ route('user.home') }}"> Home <span class="sr-only">(current)</span></a></li>
-            <li><a href="{{ route('user.convert').'#upload' }}">Convert File</a></li>
+            <li><a href="{{ route('user.convert')}}">Convert File</a></li>
             <!-- <li class="dropdown">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown">Payment Method <span class="caret"></span></a>
               <ul class="dropdown-menu" role="menu">

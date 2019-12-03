@@ -122,9 +122,9 @@
                     <h3 class="timeline-header"> Payment Method</h3>
 
                     <div class="timeline-body">
-                        <h4> File Name: {{ $fileInfo['file_name'] }} </h4> <br>
-                        <h4> File Size: {{ $fileInfo['file_size'] }} </h4> <br>
-                        <h4> Total Price: {{ $fileInfo['file_price'] }} $</h4>
+                        <h4> File Name: {{ $fileInfo['file_name'] }} </h4>
+                        <h4> File Size: {{ $fileInfo['file_size'] }} </h4>
+                        <h4> Total Price: {{ $fileInfo['file_price'] }} $</h4> <br>
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">

@@ -1,5 +1,4 @@
 <?php
-
 Route::get('/', 'Controller@index')->name('homepage');
 
 Auth::routes();
@@ -36,6 +35,7 @@ Route::post('/site-linkedin', 'AdminController@site_linkedin')->name('site_linke
 Route::post('/site-email', 'AdminController@site_email')->name('site_email');
 Route::post('/site-phone', 'AdminController@site_phone')->name('site_phone');
 Route::post('/site-header-pic', 'AdminController@site_header_pic')->name('site_header_pic');
+Route::get('/user-payment', 'UserController@user_payment_index')->name('user.payment');
 
 // User Profile
 Route::post('/user-profile-pic-update', 'UserController@profile_pic_update')->name('user.profile.pic.update');
@@ -44,14 +44,12 @@ Route::post('/user-profile-info-update', 'UserController@profile_info_update')->
 
 Route::post('/payment-verify', 'UserController@payment_verification')->name('payment.verify');
 Route::get('/user-download', 'UserController@download_file')->name('user.download');
-// Route::get('/file-download', 'UserController@download_file')->name('file.download');
 
 Route::group(['middleware' => ['checkRole:admin']], function () {
     Route::get('/admin-profile', function(){ return view('admin.profile'); })->name('admin.profile');
 });
 Route::group(['middleware' => ['checkRole:user']], function () {
     Route::get('/user-file', function(){ return view('user.convert'); })->name('user.convert');
-    Route::get('/user-payment', function(){ return view('user.pay-for-it'); })->name('user.payment');
 });
 
 

@@ -1,7 +1,6 @@
 <?php
 
 namespace App\Http\Controllers;
-
 use Hash;
 use App\User;
 use App\CloudSettings;
@@ -127,8 +126,33 @@ class UserController extends Controller
     {
         //
     }
+    public function user_payment_index()
+    {
+        // dd( session()->all() );
+        if( session('file_status') == '4' )
+        {   
+            $fileInfo['file_name'] = session('file_name');
+            $fileInfo['file_size'] = session('file_size');
+            $fileInfo['file_price'] = session('file_price');
+            return view('user.pay-for-it')->with('fileInfo', $fileInfo);
+        }
+        else
+        {
+            return redirect(route('user.convert'));
+        }
+    }
     public function download_file()
     {   
+        // dd( session()->all() );
+        if( session('file_status') != '5' )
+        {
+            return redirect(route('user.convert'));
+        }
+        // else if( session('file_status') == '4' )
+        // {
+        //     return redirect(route('user.payment'));
+        // }
+
         $file_id= session('file_id');
         $id = Auth::user()->id;
 
@@ -143,46 +167,59 @@ class UserController extends Controller
     }
     public function payment_verification(Request $request)
     {
-        // return $request->all();
-        try {
-            //charge user...
-            $charge = Stripe::charges()->create([
-                'amount' => session('file_price'),
-                'currency' => 'USD',    // UK Dollar GBP
-                'source' => $request->stripeToken,
-                'description' => 'Order',
-                'receipt_email' => Auth::user()->email,
-                'metadata' => [
-                    //
-                    // 'contents' => 'contentss',
-                    // 'quantity' => 'quantitity'
-                ],
-            ]);
-            
-            // Success 
-            $id = Auth::user()->id;
-            $fileInfo = new CloudFiles;
-            $fileInfo->user_id = $id;
-            $fileInfo->file_name = session('file_name');
-            $fileInfo->status = '5';
-            $fileInfo->file_size = session('file_size');
-            $fileInfo->price = session('file_price');
-            $fileInfo->save();
-            session([
-                'comment' => 'payment compelted',
-                'file_id' => $fileInfo->id,
-            ]);
-            return Redirect::route('user.download');
+        if( (int)session('file_status') > 0 )
+        {
+            try {
+                //charge user...
+                $charge = Stripe::charges()->create([
+                    'amount' => (int)session('file_status'),
+                    'currency' => 'USD',    // UK Dollar GBP
+                    'source' => $request->stripeToken,
+                    'description' => 'Order',
+                    'receipt_email' => Auth::user()->email,
+                    'metadata' => [
+                        //
+                        // 'contents' => 'contentss',
+                        // 'quantity' => 'quantitity'
+                    ],
+                ]);
+                
+                // Success 
+                $id = Auth::user()->id;
+                $fileInfo = new CloudFiles;
+                $fileInfo->user_id = $id;
+                $fileInfo->file_name = session('file_name');
+                $fileInfo->status = '5';
+                $fileInfo->file_size = session('file_size');
+                $fileInfo->price = session('file_price');
+                $fileInfo->save();
+                session([
+                    'comment' => 'payment compelted',
+                    'file_id' => $fileInfo->id,
+                ]);
 
-        } catch (CardErrorException $e) {
-            dd($e);
-            // return Redirect::back()->withErrors('Payment method not verified!', 'payment');
+                session([
+                    'file_status' => '5',
+                    'comment' => 'user has been charged!!'
+                ]);
+                return Redirect::route('user.download');
+    
+            } catch (CardErrorException $e) {
+                // dd($e);
+                return Redirect::back()->withErrors( $e->getMessage(), 'payment' );
+            }
         }
+        else
+        {
+            return Redirect::back();
+        }
+
     }
 
     // File uploading to cloud
     public function setFileSession(Request $request)
     {
+        // dd(session()->all());
         $file = $request->file('file_name');
         
         // Set File name
@@ -208,7 +245,6 @@ class UserController extends Controller
         {        
             return Redirect::back()->withErrors('Please upload a json file!', 'file');
         }
-
         // Store file info in session
         $this->setFileSession($request);
 
@@ -229,10 +265,7 @@ class UserController extends Controller
 
         // Generate Download link
 
-        $fileInfo['file_name'] = session('file_name');
-        $fileInfo['file_size'] = session('file_size');
-        $fileInfo['file_price'] = session('file_price');
-        return view('user.pay-for-it')->with('fileInfo', $fileInfo);
+        return Redirect::route('user.payment');
         
     }
     public function uploadToCloudInput(Request $request)

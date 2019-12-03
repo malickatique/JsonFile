@@ -19,7 +19,7 @@
 
         <div class="info-box-content">
           <span class="info-box-text">Total Earning</span>
-          <span class="info-box-number">{{  $info['total_earning'] }}<small>%</small></span>
+          <span class="info-box-number">{{  $info['total_earning'] }}<small>$</small></span>
         </div>
         <!-- /.info-box-content -->
       </div>
