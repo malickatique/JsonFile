@@ -26,7 +26,7 @@
                     <table id="example2" class="table table-bordered table-hover dataTable" role="grid" aria-describedby="example2_info">
                         <thead>
                             <tr role="row">
-                                <th class="sorting_asc" tabindex="0" aria-controls="example2" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Rendering engine: activate to sort column descending">id#</th>
+                                <th class="sorting_asc" tabindex="0" aria-controls="example2" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Rendering engine: activate to sort column descending">Date</th>
                                 <th class="sorting" tabindex="0" aria-controls="example2" rowspan="1" colspan="1" aria-label="Browser: activate to sort column ascending">Image</th>
                                 <th class="sorting" tabindex="0" aria-controls="example2" rowspan="1" colspan="1" aria-label="Platform(s): activate to sort column ascending">Name</th>
                                 <th class="sorting" tabindex="0" aria-controls="example2" rowspan="1" colspan="1" aria-label="Engine version: activate to sort column ascending">Email</th>
@@ -38,7 +38,7 @@
                         <tbody>
                             @foreach($users as $user)
                             <tr role="row" class="odd">
-                                <td class="text-center sorting_1"> {{ $user->id }} </td>
+                                <td class="text-center sorting_1"> {{ $user->created_at->format('d/m/Y') }} </td>
                                 <td class="">
                                     @if( $user->imageurl != null )
                                         <img src="{{ asset('img/profile_pic/'.$user->imageurl) }}" class="img-responsive" style="width:40px;height:40px" alt="User Image">

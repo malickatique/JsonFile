@@ -26,7 +26,7 @@ class UserController extends Controller
     public function __construct()
     {
         //Specify required role for this controller here in checkRole:xyz
-        $this->middleware(['auth', 'checkRole:user']); 
+        $this->middleware(['auth', 'checkRole:user', 'verified']); 
     }
     public function user_profile()
     {       
@@ -211,7 +211,7 @@ class UserController extends Controller
         }
         else
         {
-            return Redirect::back();
+            return Redirect::back()->withErrors('An error occuured in the network, please try again!', 'payment');
         }
 
     }

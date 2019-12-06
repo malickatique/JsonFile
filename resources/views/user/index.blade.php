@@ -85,7 +85,7 @@
                         <tbody>
                             @foreach($files as $file)
                             <tr role="row" class="odd">
-                                <td class="text-center sorting_1"> {{ $file->id }} </td>
+                                <td class="text-center sorting_1"> {{ $file->created_at->format('d/m/Y') }} </td>
 
                                 <td class="">
                                     {{ $file->file_name }}

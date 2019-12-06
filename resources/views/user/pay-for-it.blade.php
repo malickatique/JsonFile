@@ -129,13 +129,13 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="exampleInputEmail1">Cardholder name</label>
-                                    <input type="text" class="form-control" name="name_on_card" id="name_on_card" placeholder="Cardholder name">
+                                    <input type="text" class="form-control" name="name_on_card" minlength="3" maxlength="90" id="name_on_card" placeholder="Cardholder name" required>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="exampleInputPassword1">Adddress</label>
-                                    <input type="text" class="form-control" name="address" id="address" placeholder="Enter your address">
+                                    <input type="address" class="form-control" name="address" minlength="8" maxlength="90" id="address" placeholder="Enter your address" required>
                                 </div>
                             </div>
                         </div>

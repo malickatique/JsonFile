@@ -1,7 +1,16 @@
 <?php
 Route::get('/', 'Controller@index')->name('homepage');
-
-Auth::routes();
+//Clear Cache
+Route::get('/clear-cache', function() {
+    Artisan::call('cache:clear');
+    $exitCode = Artisan::call('config:clear');
+    $exitCode = Artisan::call('cache:clear');
+    $exitCode = Artisan::call('config:cache');
+    // return 'DONE'; //Return anything
+    session()->flush();
+    return redirect ('/');
+});
+Auth::routes(['verify' => true]);
 
 Route::get('/user-home', 'UserController@index')->name('user.home');
 Route::get('/user-profile', 'UserController@user_profile')->name('user.profile');
@@ -59,3 +68,7 @@ Route::group(['middleware' => ['checkRole:user']], function () {
 Route::post('/processFile', 'UserController@processFile')->name('processFile');
 
 Route::get('/test', 'UserController@test')->name('test');
+
+// Route::get('/getCountries','Controller@getCountries');
+Route::get('/getStates/{id}','Controller@geStates');
+Route::get('/getCities/{id}','Controller@geCities');

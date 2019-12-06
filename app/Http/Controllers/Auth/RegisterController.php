@@ -7,6 +7,7 @@ use App\User;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use DB;
 
 class RegisterController extends Controller
 {
@@ -51,7 +52,15 @@ class RegisterController extends Controller
         return Validator::make($data, [
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'password' => ['required', 'string', 'min:8', 'confirmed'],
+            'password' => [
+                'required',
+                'string',
+                'min:6',                 // must be at least 5 characters in length
+                // 'regex:/[a-z]/',      // must contain at least one lowercase letter
+                // 'regex:/[A-Z]/',      // must contain at least one uppercase letter
+                // 'regex:/[0-9]/',      // must contain at least one digit
+                // 'regex:/[@$!%*#?&]/', // must contain a special character
+            ],
         ]);
     }
 
@@ -63,10 +72,48 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-        return User::create([
-            'name' => $data['name'],
-            'email' => $data['email'],
-            'password' => Hash::make($data['password']),
-        ]);
+        $country = DB::table('countries')->where('id', $data['country'] )->pluck('country_name');
+        $state = DB::table('states')->where('id', $data['state'] )->pluck('state_name');
+        $city = DB::table('cities')->where('id', $data['city'] )->pluck('city_name');
+
+        if( $data['type'] == 'organization' )
+        {
+            return User::create([
+                'name' => $data['name'],
+                'email' => $data['email'],
+                'type' => $data['type'],
+                'company_name' => $data['company_name'],
+                'position' => $data['position'],
+                'password' => Hash::make($data['password']),
+
+                // Address
+                'street' => $data['street'],
+                'country' => $country[0],
+                'state' => $state[0],
+                'city' => $city[0],
+                'post_code' => $data['post_code'],
+            ]);
+        }
+        else{
+            return User::create([
+                'name' => $data['name'],
+                'email' => $data['email'],
+                'type' => $data['type'],
+                'password' => Hash::make($data['password']),
+                
+                // Address
+                'street' => $data['street'],
+                'country' => $country[0],
+                'state' => $state[0],
+                'city' => $city[0],
+                'post_code' => $data['post_code'],
+            ]);
+        }
+    }
+
+    public function showRegistrationForm()
+    {
+        $countries = DB::table('countries')->select('id', 'country_name')->get();
+        return view('auth.register')->with('countries', $countries);
     }
 }
