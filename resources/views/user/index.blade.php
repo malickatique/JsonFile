@@ -123,7 +123,7 @@
                                     </form>
                                 </td> -->
                                 <td width="60" class="text-center">
-                                    <a href="#" data-toggle="tooltip" title="" class="btn btn-default btn-sm" data-original-title="View properties."><i class="fa fa-building"></i></a>
+                                    <a href="{{ route('file.invoice', ['id' => $file->id ]) }}" data-toggle="tooltip" title="" class="btn btn-default btn-sm" data-original-title="View invoice."><i class="fa fa-building"></i></a>
                                     <!-- <a href="#" data-toggle="tooltip" title="" class="btn btn-default btn-sm" data-original-title="View user info"><i class="fa fa-eye"></i></a> -->
                                     <!-- <a href="#" data-toggle="tooltip" title="" class="btn btn-default btn-sm" data-original-title="Edit user info"><i class="fa fa-edit"></i></a> -->
 

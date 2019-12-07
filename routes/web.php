@@ -20,6 +20,7 @@ Route::get('/admin-home', 'AdminController@index')->name('admin.home');
 Route::get('/user-view/{id}', 'AdminController@user_view')->name('user.view');
 Route::get('/file-view/{id}', 'AdminController@file_view')->name('file.view');
 Route::get('/admin-edit/{id}', 'AdminController@admin_edit')->name('admin.edit');
+Route::get('/file-info/{id}', 'UserController@file_invoice')->name('file.invoice');
 
 // Super Admins Profile
 Route::post('/admin-profile-pic-update', 'AdminController@profile_pic_update')->name('admin.profile.pic.update');

@@ -537,4 +537,13 @@ class UserController extends Controller
         return Redirect::back()->withErrors(['msg'=> 'Profile updated successfully!']);
     }
     // User profile update
+    public function file_invoice($id)
+    {
+        $file = CloudFiles::where('id', $id)->first();
+        $payment = Payment::where('file_id', $id)->first();
+        
+        $data['file'] = $file;
+        $data['payment'] = $payment;
+        return view('user.file-invoice')->with('data', $data);
+    }
 }
