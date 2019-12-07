@@ -19,6 +19,7 @@ class CreatePaymentsTable extends Migration
             $table->integer('file_id');
 
             $table->string('name_on_card')->nullable();
+            $table->string('address')->nullable();
             $table->string('cost')->nullable();
 
             $table->timestamps();

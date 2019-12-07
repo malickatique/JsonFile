@@ -29,9 +29,10 @@
                                 <th class="sorting_asc" tabindex="0" aria-controls="example2" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Rendering engine: activate to sort column descending">Date</th>
                                 <th class="sorting" tabindex="0" aria-controls="example2" rowspan="1" colspan="1" aria-label="Browser: activate to sort column ascending">Image</th>
                                 <th class="sorting" tabindex="0" aria-controls="example2" rowspan="1" colspan="1" aria-label="Platform(s): activate to sort column ascending">Name</th>
+                                <th class="sorting" tabindex="0" aria-controls="example2" rowspan="1" colspan="1" aria-label="Platform(s): activate to sort column ascending">Phone</th>
                                 <th class="sorting" tabindex="0" aria-controls="example2" rowspan="1" colspan="1" aria-label="Engine version: activate to sort column ascending">Email</th>
                                 <th class="sorting" tabindex="0" aria-controls="example2" rowspan="1" colspan="1" aria-label="CSS grade: activate to sort column ascending">Access</th>
-                                <th class="sorting" tabindex="0" aria-controls="example2" rowspan="1" colspan="1" aria-label="CSS grade: activate to sort column ascending">Event</th>
+                                <!-- <th class="sorting" tabindex="0" aria-controls="example2" rowspan="1" colspan="1" aria-label="CSS grade: activate to sort column ascending">Event</th> -->
                                 <th class="sorting" tabindex="0" aria-controls="example2" rowspan="1" colspan="1" aria-label="CSS grade: activate to sort column ascending" width="120">Action</th>
                             </tr>
                         </thead>
@@ -51,6 +52,10 @@
                                     {{ $user->name }}
                                 </td>
 
+                                <td class="text-capitalize">
+                                    {{ $user->phone }}
+                                </td>
+
                                 <td>
                                     {{ $user->email }}
                                 </td>
@@ -61,20 +66,24 @@
                                         <small class="label label-danger">admin</small>
                                     @endif
                                 </td>
-                                <td class="text-center">
+                                <!-- <td class="text-center">
                                     <form method="" action="#">
                                         @csrf
                                         <input type="hidden" name="user_id" value="1">
                                         <input type="hidden" name="status" value="1">
                                         <button type="submit" data-toggle="tooltip" title="" class="btn btn-default btn-sm" data-original-title="Deactivate user">
-                                            <!-- <i class="fa fa-toggle-off fa-lg"></i> -->
-                                            <i class="fa fa-toggle-on fa-lg"></i>
+                                            <i class="fa fa-toggle-off fa-lg"></i>
                                         </button>
                                     </form>
-                                </td>
+                                </td> -->
                                 <td width="60" class="text-center">
-                                    <a href="#" data-toggle="tooltip" title="" class="btn btn-default btn-sm" data-original-title="View properties."><i class="fa fa-building"></i></a>
-                                    <a href="#" data-toggle="tooltip" title="" class="btn btn-default btn-sm" data-original-title="View user info"><i class="fa fa-eye"></i></a>
+                                    <!-- <a href="#" data-toggle="tooltip" title="" class="btn btn-default btn-sm" data-original-title="View properties."><i class="fa fa-building"></i></a> -->
+
+                                    @if( $user->role == 'user' )
+                                        <a href="{{ route('user.view', ['id' => $user->id] ) }}" data-toggle="tooltip" title="" class="btn btn-default btn-sm" data-original-title="View user info"><i class="fa fa-eye"></i></a>
+                                    @else
+                                        <a href="{{ route('admin.edit', ['id' => $user->id] ) }}" data-toggle="tooltip" title="" class="btn btn-default btn-sm" data-original-title="View user info" disabled><i class="fa fa-edit"></i></a>
+                                    @endif
                                     <!-- <a href="#" data-toggle="tooltip" title="" class="btn btn-default btn-sm" data-original-title="Edit user info"><i class="fa fa-edit"></i></a> -->
 
                                     <form style="display: -webkit-inline-box;" action="{{ route('del.user') }}" method="POST">

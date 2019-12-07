@@ -16,6 +16,11 @@ Route::get('/user-home', 'UserController@index')->name('user.home');
 Route::get('/user-profile', 'UserController@user_profile')->name('user.profile');
 Route::get('/admin-home', 'AdminController@index')->name('admin.home');
 
+
+Route::get('/user-view/{id}', 'AdminController@user_view')->name('user.view');
+Route::get('/file-view/{id}', 'AdminController@file_view')->name('file.view');
+Route::get('/admin-edit/{id}', 'AdminController@admin_edit')->name('admin.edit');
+
 // Super Admins Profile
 Route::post('/admin-profile-pic-update', 'AdminController@profile_pic_update')->name('admin.profile.pic.update');
 Route::post('/admin-profile-password-update', 'AdminController@profile_password_update')->name('admin.profile.password.update');

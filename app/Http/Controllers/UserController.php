@@ -198,6 +198,7 @@ class UserController extends Controller
                 $payment->user_id = $id;
                 $payment->file_id = $file->id;
                 $payment->name_on_card = $request->name_on_card;
+                $payment->address = $request->address;
                 $payment->cost = session('file_price');
                 $payment->save();
 

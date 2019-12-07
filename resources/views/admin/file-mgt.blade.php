@@ -48,10 +48,10 @@
                                     {{ $file->file_size }}
                                 </td>
                                 <td>
-                                    {{ $file->price }} $
+                                    {{ $file->cost }} $
                                 </td>
                                 <td class="text-center">
-                                    @if( $file->status == '5' )
+                                    @if( $file->status == '6' )
                                         <small class="label label-success" >Paid</small>
                                     @else
                                         <small class="label label-danger">Not Paid</small>
@@ -68,14 +68,15 @@
                                     </form>
                                 </td> -->
                                 <td width="60" class="text-center">
-                                    <a href="#" data-toggle="tooltip" title="" class="btn btn-default btn-sm" data-original-title="View properties."><i class="fa fa-building"></i></a>
-                                    <a href="#" data-toggle="tooltip" title="" class="btn btn-default btn-sm" data-original-title="View user info"><i class="fa fa-eye"></i></a>
+                                    <!-- <a href="#" data-toggle="tooltip" title="" class="btn btn-default btn-sm" data-original-title="View properties."><i class="fa fa-building"></i></a> -->
+                                    
+                                    <a href="{{ route('file.view', ['id' => $file->id] ) }}" data-toggle="tooltip" title="" class="btn btn-default btn-sm" data-original-title="View Details"><i class="fa fa-eye"></i></a>
                                     <!-- <a href="#" data-toggle="tooltip" title="" class="btn btn-default btn-sm" data-original-title="Edit user info"><i class="fa fa-edit"></i></a> -->
 
                                     <form style="display: -webkit-inline-box;" action="{{ route('del.db.file') }}" method="POST">
                                         @csrf
                                         <input name="file_id" type="hidden" value="{{ $file->id }}">
-                                        <button class="btn btn-default btn-sm" data-toggle="tooltip" title="" type="submit" onclick="return confirm('Are you sure you want to delete this record?');" data-original-title="Delete user"><i class="fa fa-trash"></i></button>
+                                        <button class="btn btn-default btn-sm" data-toggle="tooltip" title="" type="submit" onclick="return confirm('Are you sure you want to delete this file from Cloud/Storage?');" data-original-title="Delete record"><i class="fa fa-trash"></i></button>
                                     </form>
                                     
                                 </td>

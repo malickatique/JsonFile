@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\CloudSettings;
 use App\CloudFiles;
+use App\Payment;
 use App\SiteSettings;
 use Hash;
 use App\UserInfo;
@@ -13,6 +14,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class AdminController extends Controller
 {
@@ -205,8 +207,17 @@ class AdminController extends Controller
     }
     public function del_db_file(Request $request)
     {
+        // Delete from database
         $file = CloudFiles::find($request->file_id);
+        $payment = Payment::where('file_id', $request->file_id)->first();
+        
+        // Delete from cloud
+        $cloud = CloudSettings::first();
+        $isDelete = Storage::disk($cloud->disk_name)->delete('input/'.$file->file_name );
+
         $file->delete();
+        $payment->delete();
+
         return Redirect::back();
     }
     public function del_user(Request $request)
@@ -364,5 +375,34 @@ class AdminController extends Controller
         
         $site->save();
         return view('admin.site-settings')->with('site', $site);
+    }
+    public function user_view($id)
+    {
+        $user = User::where('id', $id)->first();
+        $userInfo = UserInfo::where('user_id', $id)->first();
+        
+        $data['user'] = $user;
+        $data['userInfo'] = $userInfo;
+        return view('admin.user-view')->with('data', $data);
+    }
+    public function file_view($id)
+    {
+        $file = CloudFiles::where('id', $id)->first();
+        $user = User::where('id', $file->user_id)->first();
+        $userInfo = UserInfo::where('user_id', $file->user_id)->first();
+        $payment = Payment::where('file_id', $id)->first();
+        
+        $data['file'] = $file;
+        $data['user'] = $user;
+        $data['payment'] = $payment;
+        $data['userInfo'] = $userInfo;
+        return view('admin.file-view')->with('data', $data);
+    }
+    public function admin_edit($id)
+    {
+        $user = User::where('id', $id)->first();
+        // $userInfo = UserInfo::where('user_id', $file->user_id)->first();
+        // $data['user'] = $user;
+        return view('admin.admin-edit')->with('user', $user);
     }
 }
