@@ -18,8 +18,8 @@
         <span class="info-box-icon bg-blue"><i class="fa fa-dollar"></i></span>
 
         <div class="info-box-content">
-          <span class="info-box-text">Total Earning</span>
-          <span class="info-box-number">{{  $info['total_earning'] }}<small>$</small></span>
+          <span class="info-box-text">REVENUE</span>
+          <span class="info-box-number">{{  $info['total_earning'] }}  $<small></small></span>
         </div>
         <!-- /.info-box-content -->
       </div>
@@ -32,17 +32,17 @@
     <div class="col-md-3 col-sm-6 col-xs-12">
       <div class="info-box bg-blue">
 
-        <span class="info-box-icon"><i class="fa fa-files-o"></i></span>
+        <span class="info-box-icon"><i class="fa fa-line-chart"></i></span>
         <div class="info-box-content">
-          <span class="info-box-text">Total Files</span>
+          <span class="info-box-text">Total Transactions</span>
           <span class="info-box-number"> {{ $info['total_files'] }} </span>
 
-          <div class="progress">
+          <!-- <div class="progress">
             <div class="progress-bar" style="width: 55%"></div>
           </div>
           <span class="progress-description">
             50% Increase in 30 Days
-          </span>
+          </span> -->
         </div>
         <!-- /.info-box-content -->
       </div>
@@ -54,7 +54,7 @@
         <span class="info-box-icon bg-blue"><i class="ion ion-ios-people-outline"></i></span>
 
         <div class="info-box-content">
-          <span class="info-box-text">New Members</span>
+          <span class="info-box-text">Total Customers</span>
           <span class="info-box-number">{{ $info['total_users'] }}</span>
         </div>
         <!-- /.info-box-content -->
@@ -66,19 +66,19 @@
     <!-- /.col -->
     <div class="col-md-3 col-sm-6 col-xs-12">
       <div class="info-box bg-blue">
-        <span class="info-box-icon"><i class="ion ion-ios-cloud-download-outline"></i></span>
+        <span class="info-box-icon"><i class="fa fa-user-secret"></i></span>
 
         <div class="info-box-content">
-          <span class="info-box-text">Downloads</span>
-          <span class="info-box-number">114,381</span>
+          <span class="info-box-text">Not Verified Users</span>
+          <span class="info-box-number">{{ $info['not_verified_users'] }}</span>
 
-          <div class="progress">
+          <!-- <div class="progress">
             <div class="progress-bar" style="width: 70%"></div>
           </div>
           <span class="progress-description">
             abc
           </span>
-        </div>
+        </div> -->
         <!-- /.info-box-content -->
       </div>
     </div>

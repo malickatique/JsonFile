@@ -6,6 +6,7 @@ use App\CloudSettings;
 use App\CloudFiles;
 use App\SiteSettings;
 use Hash;
+use App\UserInfo;
 use App\Admin;
 use App\User;
 use Illuminate\Http\Request;
@@ -32,12 +33,13 @@ class AdminController extends Controller
         $files = CloudFiles::all();
         $total_earning = 0;
         foreach ($files as $file) {
-            if($file->status == '5')
+            if($file->status == '6')
             {
-                $total_earning += $file->price;
+                $total_earning += $file->cost;
             }
         }
 
+        $info['not_verified_users'] = User::where('email_verified_at', '=', NULL)->count();
         $info['total_files'] = $files->count();
         $info['total_users'] = User::where('role', '=', 'user')->count();
         $info['total_earning'] = $total_earning;
@@ -229,6 +231,16 @@ class AdminController extends Controller
         $cloud->save();
 
         config(['app.DROPBOX_TOKEN' => $request->token]);
+        // dd( config('app.DROPBOX_TOKEN') );
+        return Redirect::back();
+    }
+    public function cloud_price(Request $request)
+    {
+        $cloud = CloudSettings::first();
+        $cloud->price_per_mb = $request->price_per_mb;
+        $cloud->save();
+
+        // config(['app.DROPBOX_TOKEN' => $request->token]);
         // dd( config('app.DROPBOX_TOKEN') );
         return Redirect::back();
     }

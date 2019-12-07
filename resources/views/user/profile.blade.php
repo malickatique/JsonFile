@@ -54,9 +54,9 @@
           <ul class="list-group">
               
             <li class="list-group-item text-muted">Activity <i class="fa fa-dashboard fa-1x"></i></li>
-            <li class="list-group-item text-right"><span class="pull-left"><strong>id</strong></span> {{ Auth::user()->id }}</li>
+            <!-- <li class="list-group-item text-right"><span class="pull-left"><strong>id</strong></span> {{ Auth::user()->id }}</li> -->
             <li class="list-group-item text-right"><span class="pull-left"><strong>Files</strong></span> {{ $info['total_files'] }} </li>
-            <li class="list-group-item text-right"><span class="pull-left"><strong>Spent</strong></span> {{ $info['total_files'] }} </li>
+            <li class="list-group-item text-right"><span class="pull-left"><strong>Spent</strong></span> {{ $info['total_spent'] }} $ </li>
             <!-- <li class="list-group-item text-right"><span class="pull-left"><strong>Posts</strong></span> 37</li> -->
           </ul> 
                
@@ -86,20 +86,6 @@
                               <input type="text" class="form-control" name="name" value="{{Auth::user()->name}}" id="first_name" required placeholder="first name">
                           </div>
                       </div>
-          
-                      <!-- <div class="form-group">
-                          <div class="col-xs-6">
-                              <label for="phone"><h4>Phone</h4></label>
-                              <input type="text" class="form-control" name="phone" id="phone" required placeholder="enter phone" title="enter your phone number if any.">
-                          </div>
-                      </div>
-          
-                      <div class="form-group">
-                          <div class="col-xs-6">
-                             <label for="mobile"><h4>Mobile</h4></label>
-                              <input type="text" class="form-control" name="mobile" id="mobile" required placeholder="enter mobile number" title="enter your mobile number if any.">
-                          </div>
-                      </div> -->
 
                       <div class="form-group">    
                           <div class="col-xs-6">
@@ -107,13 +93,60 @@
                               <input type="email" class="form-control" name="email" value="{{Auth::user()->email}}" id="email" required placeholder="you@email.com" title="enter your email.">
                           </div>
                       </div>
-                      <!-- <div class="form-group">
-                          
+
+                    <div class="form-group">
                           <div class="col-xs-6">
-                              <label for="email"><h4>Location</h4></label>
-                              <input type="email" class="form-control" id="location" required placeholder="somewhere" title="enter a location">
+                              <label for="phone"><h4>Mobile</h4></label>
+                              <input type="number" class="form-control" name="phone" value="{{Auth::user()->phone }}" id="phone" required placeholder="enter phone" title="enter your phone number if any.">
+                          </div>
+                      </div>
+                        
+                      <!-- <div class="form-group">
+                          <div class="col-xs-6">
+                             <label for="type"><h4>Type</h4></label>
+                              <input type="text" class="form-control" name="type" value="{{Auth::user()->type}}" disabled>
                           </div>
                       </div> -->
+                        
+                      <div class="form-group">
+                          <div class="col-xs-12">
+                              <hr>
+                              <h4> Address </h4>
+                              <hr>
+                          </div>
+                      </div>
+
+                      <div class="form-group">
+                          <div class="col-xs-6">
+                             <label for="street"><h4>Street</h4></label>
+                              <input type="text" class="form-control" name="street" value="{{ $info['userInfo']['street'] }}">
+                          </div>
+                      </div>
+                      <div class="form-group">
+                          <div class="col-xs-6">
+                             <label for="country"><h4>Country</h4></label>
+                              <input type="text" class="form-control" name="country" value="{{ $info['userInfo']['country'] }}">
+                          </div>
+                      </div>          
+                      <div class="form-group">
+                          <div class="col-xs-6">
+                             <label for="state"><h4>State</h4></label>
+                              <input type="text" class="form-control" name="state" value="{{ $info['userInfo']['state'] }}">
+                          </div>
+                      </div>          
+                      <div class="form-group">
+                          <div class="col-xs-6">
+                             <label for="city"><h4>City</h4></label>
+                              <input type="text" class="form-control" name="city" value="{{ $info['userInfo']['city'] }}">
+                          </div>
+                      </div>     
+                      <div class="form-group">
+                          <div class="col-xs-6">
+                             <label for="post_code"><h4>Postal/ZIP</h4></label>
+                              <input type="text" class="form-control" name="post_code" value="{{ $info['userInfo']['post_code'] }}">
+                          </div>
+                      </div>   
+
                       <div class="form-group">
                            <div class="col-xs-12">
                                 <br>
@@ -134,20 +167,20 @@
                     <div class="form-group">      
                           <div class="col-xs-6">
                               <label for="password"><h4>Old Password</h4></label>
-                              <input type="password" class="form-control" name="old_password" id="password" required placeholder="password" title="enter your password.">
+                              <input type="password" class="form-control" name="old_password" id="password" required placeholder="Enter your old password.">
                           </div>
                       </div>
                       <div class="form-group">
                           
                           <div class="col-xs-6">
                             <label for="password2"><h4>New Password</h4></label>
-                              <input type="password" class="form-control" name="new_password" id="password2" required placeholder="password2" title="enter your password2.">
+                              <input type="password" class="form-control" name="new_password" id="password2" required placeholder="Enter your new password.">
                           </div>
                       </div>
                       <div class="form-group">
                           <div class="col-xs-6">
                             <label for="password2"><h4>Retype Password</h4></label>
-                              <input type="password" class="form-control" name="retype_password" id="password2" required placeholder="password2" title="enter your password2.">
+                              <input type="password" class="form-control" name="retype_password" id="password2" required placeholder="Retype your new password.">
                           </div>
                       </div>
                       <div class="form-group">

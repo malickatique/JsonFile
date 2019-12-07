@@ -101,6 +101,24 @@
                         </form>
                     </tr>
 
+                    <tr>
+                        <td>5 </td>
+                        <td class="text-capitalize">Set Price per MB (USD)</td>
+                        <form class="form-horizontal" method="POST" action="{{ route('cloud.price') }}">
+                            @csrf
+                            <td>
+                                <div class="form-group">
+                                    <div class="col-sm-6 col-xs-8">
+                                        <input type="text" name="price_per_mb" maxlength="190" minlength="1" value="{{ $cloud->price_per_mb }}" class="form-control" required>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <button type="submit" class="btn btn-primary btn-sm"><i class="fa fa-check-square-o fa-lg"></i></button>
+                            </td>
+                        </form>
+                    </tr>
+
                 </tbody>
             </table>
         </div>

@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 use Hash;
 use App\User;
+use App\Payment;
+use App\UserInfo;
 use App\CloudSettings;
 use App\SiteSettings;
 use App\CloudFiles;
@@ -33,12 +35,11 @@ class UserController extends Controller
         $id = Auth::user()->id;
         $files = CloudFiles::where('user_id', '=', $id)->get();
         $total_spent = 0;
-        foreach ($files as $file) {
-            if($file->status == '5')
-            {
-                $total_spent += $file->price;
-            }
-        }
+        
+        $userInfo = UserInfo::where('user_id', $id)->first();
+
+        $total_spent = $userInfo->total_spent;
+        $info['userInfo'] = $userInfo;
         $info['total_files'] = $files->count();
         $info['total_spent'] = $total_spent;
         
@@ -49,13 +50,10 @@ class UserController extends Controller
         //
         $id = Auth::user()->id;
         $files = CloudFiles::where('user_id', '=', $id)->get();
-        $total_spent = 0;
-        foreach ($files as $file) {
-            if($file->status == '5')
-            {
-                $total_spent += $file->price;
-            }
-        }
+
+        $userInfo = UserInfo::where('user_id', $id)->first();
+
+        $total_spent = $userInfo->total_spent;
         $info['total_files'] = $files->count();
         $info['total_spent'] = $total_spent;
         return view('user.index')->with('files', $files)->with('info', $info);
@@ -129,7 +127,7 @@ class UserController extends Controller
     public function user_payment_index()
     {
         // dd( session()->all() );
-        if( session('file_status') == '4' )
+        if( session('file_status') == '5' )
         {   
             $fileInfo['file_name'] = session('file_name');
             $fileInfo['file_size'] = session('file_size');
@@ -144,7 +142,7 @@ class UserController extends Controller
     public function download_file()
     {   
         // dd( session()->all() );
-        if( session('file_status') != '5' )
+        if( session('file_status') != '6' )
         {
             return redirect(route('user.convert'));
         }
@@ -165,14 +163,15 @@ class UserController extends Controller
         // dd($file);
         return view('user.download')->with('file', $file);
     }
-    public function payment_verification(Request $request)
+    public function payment_verification(Request $request)  // Payment Method Verification
     {
-        if( (int)session('file_status') > 0 )
+
+        if( session('file_status') == 5 )  // 5 = File is processed and in Cloud's output folder
         {
             try {
                 //charge user...
                 $charge = Stripe::charges()->create([
-                    'amount' => (int)session('file_status'),
+                    'amount' => (float)session('file_price'),
                     'currency' => 'USD',    // UK Dollar GBP
                     'source' => $request->stripeToken,
                     'description' => 'Order',
@@ -186,22 +185,37 @@ class UserController extends Controller
                 
                 // Success 
                 $id = Auth::user()->id;
-                $fileInfo = new CloudFiles;
-                $fileInfo->user_id = $id;
-                $fileInfo->file_name = session('file_name');
-                $fileInfo->status = '5';
-                $fileInfo->file_size = session('file_size');
-                $fileInfo->price = session('file_price');
-                $fileInfo->save();
+                $file = new CloudFiles;
+                $file->user_id = $id;
+                $file->file_name = session('file_name');
+                $file->status = '6';
+                $file->file_size = session('file_size');
+                $file->cost = session('file_price');
+                $file->save();
+
+                // Payment invoice record
+                $payment = new Payment;
+                $payment->user_id = $id;
+                $payment->file_id = $file->id;
+                $payment->name_on_card = $request->name_on_card;
+                $payment->cost = session('file_price');
+                $payment->save();
+
+                $userInfo = UserInfo::where('user_id', $id)->first();
+                
+                $userInfo->total_spent = (float)$userInfo->total_spent + (float)session('file_price') ;
+                $userInfo->save();
+
                 session([
                     'comment' => 'payment compelted',
-                    'file_id' => $fileInfo->id,
+                    'file_id' => $file->id,
                 ]);
 
                 session([
-                    'file_status' => '5',
+                    'file_status' => '6',
                     'comment' => 'user has been charged!!'
                 ]);
+
                 return Redirect::route('user.download');
     
             } catch (CardErrorException $e) {
@@ -215,35 +229,16 @@ class UserController extends Controller
         }
 
     }
-
-    // File uploading to cloud
-    public function setFileSession(Request $request)
-    {
-        // dd(session()->all());
-        $file = $request->file('file_name');
-        
-        // Set File name
-        $set_file_name = 'JsonFile'.uniqid().'.'.$file->getClientOriginalExtension();
-        $file_size = $file->getSize();
-
-        // Set session
-        // $request->session()->put('key', 'val')
-        session([
-            'file_name' => $set_file_name,
-            'file_location' => 'cloud input',
-            'file_size' => $this->getFileSize($file_size),  // size in KB, MB etc
-            'file_price' => $this->getPrice($file_size),
-            'file_status' => '0',
-            'user_id' => Auth::user()->id,
-            'comment' => 'setting session',
-        ]);
-    }
-    public function processFile(Request $request)
+    public function processFile(Request $request)       // File Upload Processing
     {
 
         if($request->file_name->getClientOriginalExtension() != 'json')
         {        
             return Redirect::back()->withErrors('Please upload a json file!', 'file');
+        }
+        else if( $this->getPrice( $request->file_name->getSize() ) < 0.50)
+        {
+            return Redirect::back()->withErrors('Your file does not have enough content!', 'file');
         }
         // Store file info in session
         $this->setFileSession($request);
@@ -267,6 +262,28 @@ class UserController extends Controller
 
         return Redirect::route('user.payment');
         
+    }
+    // File uploading to cloud
+    public function setFileSession(Request $request)
+    {
+        // dd(session()->all());
+        $file = $request->file('file_name');
+        
+        // Set File name
+        $set_file_name = 'JsonFile'.uniqid().'.'.$file->getClientOriginalExtension();
+        $file_size = $file->getSize();
+
+        // Set session
+        // $request->session()->put('key', 'val')
+        session([
+            'file_name' => $set_file_name,
+            'file_location' => 'cloud input',
+            'file_size' => $this->getFileSize($file_size),  // size in KB, MB etc
+            'file_price' => $this->getPrice($file_size),
+            'file_status' => '0',
+            'user_id' => Auth::user()->id,
+            'comment' => 'setting session',
+        ]);
     }
     public function uploadToCloudInput(Request $request)
     {
@@ -355,6 +372,7 @@ class UserController extends Controller
 
         session([
             'comment' => 'file moved to cloud output folder',
+            'file_status' => '5',
         ]);
     }
     public function getDownloadLink($file_id)
@@ -417,8 +435,8 @@ class UserController extends Controller
     public function getPrice($bytes)
     {
         // 1 Mb = 395$
-        $site = SiteSettings::first();
-        $price_per_mb = $site->price_per_mb;
+        $cloud = CloudSettings::first();
+        $price_per_mb = $cloud->price_per_mb;
         $price = 0;
         $bytes = number_format($bytes / 1048576, 5); // 1048576 bytes == 1 MB
         $price = number_format($bytes* $price_per_mb, 2);
@@ -488,16 +506,33 @@ class UserController extends Controller
     }
     public function profile_info_update(Request $request)
     {
+        // dd( $request->all() );
         $id = Auth::user()->id;
         $this->validate($request, [
             'name' => 'required|min:4|max:90',
+            'phone' => 'required|min:8|max:22',
+            'street' => 'required|min:4|max:50',
+            'country' => 'required|min:3|max:50',
+            'state' => 'required|min:3|max:50',
+            'city' => 'required|min:3|max:50',
+            'post_code' => 'required|min:3|max:50',
             'email' => 'required|string|email|max:255|unique:users,email,'.$id,
         ]);
 
-        $admin = User::find($id);
-        $admin->name = $request->name;
-        $admin->email = $request->email;
-        $admin->save();
+        $user = User::find($id);
+        $user->name = $request->name;
+        $user->email = $request->email;
+        $user->phone = $request->phone;
+        $user->save();
+
+        $userInfo = UserInfo::where('user_id', $id)->first();
+
+        $userInfo->street = $request->street;
+        $userInfo->country = $request->country;
+        $userInfo->state = $request->state;
+        $userInfo->city = $request->city;
+        $userInfo->post_code = $request->post_code;
+        $userInfo->save();
         return Redirect::back()->withErrors(['msg'=> 'Profile updated successfully!']);
     }
     // User profile update

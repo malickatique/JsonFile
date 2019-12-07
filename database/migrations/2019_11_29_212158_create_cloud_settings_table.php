@@ -19,6 +19,8 @@ class CreateCloudSettingsTable extends Migration
             $table->string('disk_name');
             $table->string('token')->nullable();
             $table->string('folder')->nullable();
+            $table->string('price_per_mb')->default('564');
+            $table->string('price_per_50kb')->default('13');
             $table->timestamps();
         });
         

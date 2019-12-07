@@ -1,26 +1,7 @@
 @extends('user.master')
 
 @section('content')
-<style>
-.p-4{
-    padding: 90px;
-}
-.m-4{
-    margin: 4px;
-}
-.my-4{
-    margin: 50px 0px;
-}
-.md-4{
-    margin: 0px 0px 50px 0px;
-}
-.mt-4{
-    margin: 50px 0px 0px 0px;
-}
-.py-4{
-    padding: 50px 0px;
-}
-</style>
+
 
 <div class="row">
     <div class="col-md-12">
@@ -41,13 +22,13 @@
                 <form method="POST" action="{{ route('processFile') }}" enctype="multipart/form-data" class="timeline-item">
                     @csrf
                     <h3 class="timeline-header"> Upload a Json file</h3>
-                            
-                    <div class="timeline-body">
-                        <input type="file" class="btn btn-primary" name="file_name" required>
-                    </div>
+        
+                    <input type="file" name="file_name">
+
                     <div class="timeline-footer">
                         <button type="submit" class="btn btn-primary btn-md"> Process my file </button>
                     </div>
+                    
                 </form>
             </li>
             <!-- END timeline item -->

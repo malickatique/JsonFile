@@ -26,8 +26,16 @@
             <div class="row">
                 <div class="col-sm-4 border-right">
                     <div class="description-block">
-                        <h5 class="description-header">37 TK</h5>
-                        <span class="description-text">Free Credits</span>
+                        <h5 class="description-header">
+                        
+                        @if(Auth::user()->email_verified_at != null)
+                            Verified <button class="btn btn-primary btn-xs"> <i class="fa fa-check text-white"></i> </button>
+                        @else
+                            Not Verified <button class="btn btn-danger btn-xs"> <i class="fa fa-times text-white"></i> </button>
+                        @endif
+
+                        </h5>
+                        <span class="description-text">Profile Status</span>
                     </div>
                     <!-- /.description-block -->
                 </div>
@@ -95,10 +103,10 @@
                                     {{ $file->file_size }}
                                 </td>
                                 <td>
-                                    {{ $file->price }} $
+                                    {{ $file->cost }} $
                                 </td>
                                 <td class="text-center">
-                                    @if($file->status == '5')
+                                    @if($file->status == '6')
                                         <small class="label label-success" >Paid</small>
                                     @else
                                         <small class="label label-danger">Not Paid</small>

@@ -30,6 +30,7 @@ Route::post('/delete-user', 'AdminController@del_user')->name('del.user');
 Route::get('/cloud-settings', 'AdminController@cloud_index')->name('cloud.settings');
 Route::post('/cloud-token', 'AdminController@cloud_token')->name('cloud.token');
 Route::post('/cloud-folder', 'AdminController@cloud_folder')->name('cloud.folder');
+Route::post('/cloud-price', 'AdminController@cloud_price')->name('cloud.price');
 
 Route::get('/site-settings', 'AdminController@site_settings')->name('site.settings');
 Route::post('/site-name', 'AdminController@site_name')->name('site.name');

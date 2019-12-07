@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\User;
+use App\UserInfo;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -78,7 +79,7 @@ class RegisterController extends Controller
 
         if( $data['type'] == 'organization' )
         {
-            return User::create([
+            $user = User::create([
                 'name' => $data['name'],
                 'email' => $data['email'],
                 'type' => $data['type'],
@@ -93,6 +94,14 @@ class RegisterController extends Controller
                 'city' => $city[0],
                 'post_code' => $data['post_code'],
             ]);
+            $userInfo = new UserInfo;
+            $userInfo->street = $data['street'];
+            $userInfo->country = $country[0];
+            $userInfo->state = $state[0];
+            $userInfo->city = $city[0];
+            $userInfo->post_code = $data['post_code'];
+            $userInfo->save();
+            return $user;
         }
         else{
             return User::create([
@@ -100,14 +109,15 @@ class RegisterController extends Controller
                 'email' => $data['email'],
                 'type' => $data['type'],
                 'password' => Hash::make($data['password']),
-                
-                // Address
-                'street' => $data['street'],
-                'country' => $country[0],
-                'state' => $state[0],
-                'city' => $city[0],
-                'post_code' => $data['post_code'],
             ]);
+            $userInfo = new UserInfo;
+            $userInfo->street = $data['street'];
+            $userInfo->country = $country[0];
+            $userInfo->state = $state[0];
+            $userInfo->city = $city[0];
+            $userInfo->post_code = $data['post_code'];
+            $userInfo->save();
+            return $user;
         }
     }
 

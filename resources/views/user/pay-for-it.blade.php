@@ -134,7 +134,7 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="exampleInputPassword1">Adddress</label>
+                                    <label for="exampleInputPassword1">Address</label>
                                     <input type="address" class="form-control" name="address" minlength="8" maxlength="90" id="address" placeholder="Enter your address" required>
                                 </div>
                             </div>

@@ -18,16 +18,15 @@
        folder instead of downloading all of them to reduce the load. -->
   <link rel="stylesheet" href="{{ asset('admin-lte/dist/css/skins/skin-blue-light.min.css') }}">
 
-
   <!-- DataTables -->
   <link rel="stylesheet" href="{{ asset('admin-lte/bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css') }}">
   
   <!-- Stripe -->
   <script src="https://js.stripe.com/v3/"></script>
 
-
   <!-- Google Font -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
+
 </head>
 <!-- ADD THE CLASS layout-top-nav TO REMOVE THE SIDEBAR. -->
 <body class="hold-transition skin-blue-light layout-top-nav">
@@ -269,6 +268,7 @@
 <!-- DataTables -->
 <script src="{{ asset('admin-lte/bower_components/datatables.net/js/jquery.dataTables.min.js') }}"></script>
 <script src="{{ asset('admin-lte/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js') }}"></script>
+
 <script>
   $(document).ready(function () {
     $('.sidebar-menu').tree()

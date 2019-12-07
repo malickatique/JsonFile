@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateCloudFilesTable extends Migration
+class CreatePaymentsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,15 +13,14 @@ class CreateCloudFilesTable extends Migration
      */
     public function up()
     {
-        Schema::create('cloud_files', function (Blueprint $table) {
+        Schema::create('payments', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->integer('user_id')->nullable();
-            $table->string('file_name');
-            
-            $table->string('status')->default('unprocessed');
-            // $table->string('path')->nullable();
-            $table->string('file_size')->nullable();
+            $table->integer('user_id');
+            $table->integer('file_id');
+
+            $table->string('name_on_card')->nullable();
             $table->string('cost')->nullable();
+
             $table->timestamps();
         });
     }
@@ -33,6 +32,6 @@ class CreateCloudFilesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('cloud_files');
+        Schema::dropIfExists('payments');
     }
 }

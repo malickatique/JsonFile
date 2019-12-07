@@ -3,6 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use App\UserInfo;
 
 class CreateUsersTable extends Migration
 {
@@ -24,20 +25,6 @@ class CreateUsersTable extends Migration
             $table->string('imageurl')->nullable();
             $table->rememberToken();
             $table->timestamps();
-
-            $table->string('type')->default('individual');  // or company
-
-            // Company
-            $table->string('company_name')->nullable();
-            $table->string('position')->nullable();
-
-            //User address
-            $table->string('street')->nullable();
-            $table->string('city')->nullable();
-            $table->string('state')->nullable();
-            $table->string('country')->nullable();
-            $table->string('post_code')->nullable();
-
         });
         $data =[
             [
@@ -45,17 +32,20 @@ class CreateUsersTable extends Migration
                 'role' => "user",
                 'email' => "user@test.com",
                 'password' => bcrypt('123456'),
-                'created_at' => date("Y-m-d H:i:s")
+                'created_at' => date("Y-m-d H:i:s"),
+                'email_verified_at' => date("Y-m-d H:i:s")
             ],
             [
                 'name' => "admin",
                 'role' => "admin",
                 'email' => "admin@test.com",
                 'password' => bcrypt('123456'),
-                'created_at' => date("Y-m-d H:i:s")
+                'created_at' => date("Y-m-d H:i:s"),
+                'email_verified_at' => date("Y-m-d H:i:s")
             ],
         ];
         DB::table('users')->insert($data);
+        
     }
 
     /**
