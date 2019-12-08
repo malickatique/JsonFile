@@ -36,10 +36,10 @@
     <div id="topbar">
       <div class="container">
         <div class="social-links">
-          <a href="{{ $site->site_twitter }}" class="twitter"><i class="fa fa-twitter"></i></a>
-          <a href="{{ $site->site_facebook }}" class="facebook"><i class="fa fa-facebook"></i></a>
-          <a href="{{ $site->site_linkedin }}" class="linkedin"><i class="fa fa-linkedin"></i></a>
-          <a href="{{ $site->site_instagram }}" class="instagram"><i class="fa fa-instagram"></i></a>
+          <a href="{{ $data['site']->site_twitter }}" class="twitter"><i class="fa fa-twitter"></i></a>
+          <a href="{{ $data['site']->site_facebook }}" class="facebook"><i class="fa fa-facebook"></i></a>
+          <a href="{{ $data['site']->site_linkedin }}" class="linkedin"><i class="fa fa-linkedin"></i></a>
+          <a href="{{ $data['site']->site_instagram }}" class="instagram"><i class="fa fa-instagram"></i></a>
         </div>
       </div>
     </div>
@@ -48,7 +48,7 @@
 
       <div class="logo float-left">
         <!-- Uncomment below if you prefer to use an image logo -->
-        <h1 class="text-light"><a href="#intro" class="scrollto"><span>{{ $site->site_logo_text }}</span></a></h1>
+        <h1 class="text-light"><a href="#intro" class="scrollto"><span>{{ $data['site']->site_logo_text }}</span></a></h1>
         <!-- <a href="#header" class="scrollto"><img src="img/logo.png" alt="" class="img-fluid"></a> -->
       </div>
 
@@ -123,13 +123,13 @@
                 <div class="col-sm-6">
 
                   <div class="footer-info">
-                    <h3>{{ $site->site_logo_text }}</h3>
-                    <p>{{ $site->site_about_us }}</p>
+                    <h3>{{ $data['site']->site_logo_text }}</h3>
+                    <p>{{ $data['site']->site_about_us }}</p>
                   </div>
 
                   <div class="footer-newsletter">
                     <h4>Our Newsletter</h4>
-                    <p>Tamen quem nulla quae legam multos aute sint culpa legam noster magna veniam enim veniam illum dolore legam minim quorum culpa amet magna export quem.</p>
+                    <p>{{ $data['content'][0]->p }}</p>
                     <form action="#" method="">
                       <input type="email" name="email"><input type="submit"  value="Subscribe">
                     </form>
@@ -151,17 +151,17 @@
 
                   <div class="footer-links">
                     <h4>Contact Us</h4>
-                    <p>{{ $site->site_address }} <br>
-                      <strong>Phone:</strong> {{ $site->site_phone }} <br>
-                      <strong>Email:</strong> {{ $site->site_email }}<br>
+                    <p>{{ $data['site']->site_address }} <br>
+                      <strong>Phone:</strong> {{ $data['site']->site_phone }} <br>
+                      <strong>Email:</strong> {{ $data['site']->site_email }}<br>
                     </p>
                   </div>
 
                   <div class="social-links">
-                    <a href="{{ $site->site_twitter }}" class="twitter"><i class="fa fa-twitter"></i></a>
-                    <a href="{{ $site->site_facebook }}" class="facebook"><i class="fa fa-facebook"></i></a>
-                    <a href="{{ $site->site_instagram }}" class="instagram"><i class="fa fa-instagram"></i></a>
-                    <a href="{{ $site->site_linkedin }}" class="linkedin"><i class="fa fa-linkedin"></i></a>
+                    <a href="{{ $data['site']->site_twitter }}" class="twitter"><i class="fa fa-twitter"></i></a>
+                    <a href="{{ $data['site']->site_facebook }}" class="facebook"><i class="fa fa-facebook"></i></a>
+                    <a href="{{ $data['site']->site_instagram }}" class="instagram"><i class="fa fa-instagram"></i></a>
+                    <a href="{{ $data['site']->site_linkedin }}" class="linkedin"><i class="fa fa-linkedin"></i></a>
                   </div>
 
                 </div>
@@ -212,10 +212,10 @@
 
     <div class="container">
       <div class="copyright">
-        &copy; Copyright <strong>{{ $site->site_name }}</strong>. All Rights Reserved
+        &copy; Copyright <strong>{{ $data['site']->site_name }}</strong>. All Rights Reserved
       </div>
       <div class="credits">
-        <a href="{{ route('homepage') }}">{{ $site->site_name }}</a>
+        <a href="{{ route('homepage') }}">{{ $data['site']->site_name }}</a>
       </div>
     </div>
   </footer><!-- #footer -->

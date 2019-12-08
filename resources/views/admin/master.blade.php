@@ -146,7 +146,7 @@
         </div>
       </div>
       <!-- search form -->
-      <form action="#" method="get" class="sidebar-form">
+      <!-- <form action="#" method="get" class="sidebar-form">
         <div class="input-group">
           <input type="text" name="q" class="form-control" placeholder="Search...">
           <span class="input-group-btn">
@@ -154,25 +154,19 @@
                 </button>
               </span>
         </div>
-      </form>
+      </form> -->
       <!-- /.search form -->
       <!-- sidebar menu: : style can be found in sidebar.less -->
       <ul class="sidebar-menu" data-widget="tree">
+        
         <li class="header">MAIN NAVIGATION</li>
-        <li class="treeview">
-          <a href="#">
-            <i class="fa fa-dashboard"></i> <span>Dashboard</span>
-            <span class="pull-right-container">
-              <i class="fa fa-angle-left pull-right"></i>
-            </span>
-          </a>
-          <ul class="treeview-menu">
+        
+            <li><a href="{{ route('admin.home') }}"><i class="fa fa-dashboard"></i> Dashboard </a></li>
             <li><a href="{{ route('file.mgt') }}"><i class="fa fa-file-text-o"></i> File Management </a></li>
             <li><a href="{{ route('user.mgt') }}"><i class="fa fa-user"></i> Users Management </a></li>
-          </ul>
-        </li>
         
         <li class="header">SETTINGS</li>
+        <li><a href="{{ route('site.mgt') }}"><i class="fa fa-leaf"></i> <span> Site Content </span></a></li>
         <li><a href="{{ route('cloud.settings') }}"><i class="fa fa-jsfiddle"></i> <span> Cloud Settings </span></a></li>
         <li><a href="{{ route('site.settings') }}"><i class="fa fa-gears"></i> <span> Site Settings </span></a></li>
 

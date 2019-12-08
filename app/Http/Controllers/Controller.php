@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\CloudFiles;
 use App\SiteSettings;
+use App\SiteContent;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
@@ -17,7 +18,10 @@ class Controller extends BaseController
     public function index()
     {
         $site = SiteSettings::first();
-        return view('index')->with('site', $site);
+        $content = SiteContent::get();
+        $data['site'] = $site;
+        $data['content'] = $content;
+        return view('index')->with('data', $data);
     }
     public function geStates($id)
     {
