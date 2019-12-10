@@ -82,3 +82,7 @@ Route::get('/test', 'UserController@test')->name('test');
 // Route::get('/getCountries','Controller@getCountries');
 Route::get('/getStates/{id}','Controller@geStates');
 Route::get('/getCities/{id}','Controller@geCities');
+
+
+// Site Content Settings
+Route::post('/change-content', 'ContentController@change_content')->name('content.change');
