@@ -230,8 +230,80 @@ class UserController extends Controller
         }
 
     }
+    public function getMultipleFiles(Request $request)
+    {
+        $file = $request->file('files')[0];
+        // Set File name
+        $set_file_name = Auth::user()->email .'-'. $file->getClientOriginalName();
+        $file_size = $file->getSize();
+
+        // Move files to temp
+        // $file->storeAs('temp', $set_file_name);
+        $isStore = Storage::disk('local')->put('temp/'.$set_file_name, $file);
+        if($isStore)
+        {
+            if( session('total_files') != NULL  )
+            {
+                session([
+                    'total_files' => session('total_files')+1,
+                ]);
+            }
+            else
+            {
+                session([
+                    'total_files' => 1,
+                ]);
+            }
+    
+            session()->push('files', [
+                'file_name' => $set_file_name,
+                'file_location' => 'server temp',
+                'file_size' => $this->getFileSize($file_size),  // size in KB, MB etc
+                'file_price' => $this->getPrice($file_size),
+                'file_status' => '0',
+                'user_id' => Auth::user()->id,
+            ]);
+        }
+        else
+        {
+            return false;
+        }
+        
+        return session()->all();
+        
+    }
+    public function fileRemoved(Request $request)
+    {
+        if( session('total_files') != NULL )
+        {
+            session([
+                'total_files' => session('total_files')-1,
+            ]);
+        }
+        $file_name = Auth::user()->email.'-'.$request->file;
+        $files = session('files');
+
+        foreach($files as $elementKey => $element) 
+        {
+            foreach($element as $valueKey => $value) 
+            {
+                if($valueKey == 'file_name' && $value == $file_name)
+                {
+                    print_r('file found at key:'.$elementKey);
+                    //delete this particular object from the $array
+                    unset($files[$elementKey]);
+                    session()->forget('files');
+                    session()->push('files', $files);
+                    // Delete from server/temp
+                    $isDelete = Storage::disk('local')->delete('temp/'.$file_name);
+                } 
+            }
+        }
+        return session()->all();
+    }
     public function processFile(Request $request)       // File Upload Processing
     {
+        dd('uploaded files');
 
         if($request->file_name->getClientOriginalExtension() != 'json')
         {        

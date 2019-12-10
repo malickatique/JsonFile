@@ -25,7 +25,8 @@
   <script src="https://js.stripe.com/v3/"></script>
 
   <!-- Google Font -->
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
+  <!-- <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic"> -->
+
 
 </head>
 <!-- ADD THE CLASS layout-top-nav TO REMOVE THE SIDEBAR. -->
@@ -268,6 +269,14 @@
 <!-- DataTables -->
 <script src="{{ asset('admin-lte/bower_components/datatables.net/js/jquery.dataTables.min.js') }}"></script>
 <script src="{{ asset('admin-lte/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js') }}"></script>
+
+
+    <!-- File Uploader -->
+		<link href="{{ asset('uploader/jquery.fileuploader.min.css') }}" media="all" rel="stylesheet">
+		<link href="{{ asset('uploader/jquery.fileuploader-theme-dragdrop.css') }}" media="all" rel="stylesheet">
+		<script src="{{ asset('uploader/jquery.fileuploader.min.js') }}" type="text/javascript"></script>
+		<script src="{{ asset('uploader/custom.js') }}" type="text/javascript"></script>
+
 
 <script>
   $(document).ready(function () {

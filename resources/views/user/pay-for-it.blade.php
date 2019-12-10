@@ -198,7 +198,7 @@
                     <h3 class="timeline-header"> Download your file</h3>
 
                     <div class="timeline-body">
-                        <img src="http://placehold.it/150x100" alt="..." class="margin">
+                        <img src="{{ asset('img/150x100.png') }}" alt="..." class="margin">
                     </div>
                     <div class="timeline-footer">
                         <!-- <a class="btn btn-warning btn-flat btn-xs">Download</a> -->

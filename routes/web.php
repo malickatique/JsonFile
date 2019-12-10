@@ -74,8 +74,10 @@ Route::group(['middleware' => ['checkRole:user']], function () {
 
 // Route::get('/panel', 'HomeController@index')->name('panel');
 
-// Cloud Uploading
+// Cloud Uploading  
 Route::post('/processFile', 'UserController@processFile')->name('processFile');
+Route::post('/getFiles', 'UserController@getMultipleFiles')->name('getFiles');
+Route::post('/fileRemoved', 'UserController@fileRemoved')->name('fileRemoved');
 
 Route::get('/test', 'UserController@test')->name('test');
 

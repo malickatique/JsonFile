@@ -20,11 +20,15 @@
                 <i class="fa fa-file-text bg-blue"></i>
 
                 <form method="POST" action="{{ route('processFile') }}" enctype="multipart/form-data" class="timeline-item">
-                    @csrf
-                    <h3 class="timeline-header"> Upload a Json file</h3>
-        
-                    <input type="file" name="file_name">
+                    <meta name="csrf-token" content="{{ csrf_token() }}">
+                    @csrf 
 
+                    <h3 class="timeline-header"> Upload a Json file</h3>
+                    
+                    <div style="width:500px; margin: 5px 10px;">
+                        <input id="thefiles" type="file" name="files" accept=".json" multiple>
+                    </div>
+                    
                     <div class="timeline-footer">
                         <button type="submit" class="btn btn-primary btn-md"> Process my file </button>
                     </div>
@@ -91,7 +95,7 @@
                     <h3 class="timeline-header"> Download your file</h3>
                 </a>
                     <div class="timeline-body">
-                        <img src="http://placehold.it/150x100" alt="..." class="margin">
+                        <img src="{{ asset('img/150x100.png') }}" alt="..." class="margin">
                     </div>
                     <div class="timeline-footer">
                         <!-- <a class="btn btn-warning btn-flat btn-xs">Download</a> -->
@@ -101,7 +105,7 @@
             <!-- END timeline item -->
 
             <li>
-                <i class="fa  fa-heart bg-gray"></i>
+                <i class="fa fa-heart bg-gray"></i>
             </li>
         </ul>
     </div>
