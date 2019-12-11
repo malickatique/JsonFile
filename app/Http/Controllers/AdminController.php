@@ -289,13 +289,31 @@ class AdminController extends Controller
     }
     public function del_a_file(Request $request)
     {
-
-        dd( $request->all() );
-
+        
         $place = $request->place;
         $folder = $request->folder;
         $file = $request->file;
 
+        if( $request->place != 'local' )
+        {
+            $flag=0;
+            $name = '';
+            $in=0;
+            for($i=0; $i<strlen($file); $i++)
+            {
+                if($file[$i] == '/' && $flag==0)
+                {
+                    $flag = 1;
+                }
+                if($flag ==1 && $file[$i]!='/')
+                {
+                    $name[$in++] = $file[$i];
+                }
+            }
+            $isDelete = Storage::disk($place)->delete( $folder.'/'.$name);
+            return Redirect::back();
+        }
+        
         $ind=0;
         $dir = '';
         $flag =0;
@@ -325,12 +343,11 @@ class AdminController extends Controller
     }
     public function del_all_files(Request $request)
     {
-        dd( $request->all() );
         
         $place = $request->place;
         $folder = $request->folder;
 
-        $files = Storage::allFiles($folder);
+        $files = Storage::disk($place)->allFiles($folder);
         $isDelete = Storage::disk($place)->delete($files);
         return Redirect::back();
     }

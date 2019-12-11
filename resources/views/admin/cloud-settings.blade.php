@@ -258,4 +258,5 @@
         <!-- /.box -->
     </div>
 
+    <div style="margin: 50px 10px;"></div>
     @endsection
