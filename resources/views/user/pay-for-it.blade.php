@@ -117,7 +117,7 @@
             <li>
                 <i class="fa fa-dollar bg-green"></i>
 
-                <form method="POST" action="{{ route('payment.verify') }}" enctype="multipart/form-data" class="timeline-item" id="payment-form">
+                <form name="payment-form" method="POST" action="{{ route('payment.verify') }}" enctype="multipart/form-data" class="timeline-item" id="payment-form">
                     @csrf  
                     <h3 class="timeline-header"> Payment Method</h3>
 
@@ -138,13 +138,41 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="exampleInputEmail1">Cardholder name</label>
-                                    <input type="text" class="form-control" name="name_on_card" minlength="3" maxlength="90" id="name_on_card" placeholder="Cardholder name" required>
+                                    <input type="text" class="form-control" name="name_on_card" value="{{ $user->name }}" minlength="3" maxlength="90" id="name_on_card" placeholder="Cardholder name" required>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="exampleInputPassword1">Address</label>
-                                    <input type="address" class="form-control" name="address" minlength="8" maxlength="90" id="address" placeholder="Enter your address" required>
+                                    <label for="exampleInputPassword1">Street address</label>
+                                    <input type="address" class="form-control" name="street" value="{{ $userInfo->street }}" minlength="8" maxlength="90" id="street" placeholder="Enter your street address" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="exampleInputEmail1">City</label>
+                                    <input type="text" class="form-control" name="city" value="{{ $userInfo->city }}" minlength="3" maxlength="90" id="city" placeholder="Enter city" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="exampleInputPassword1">State</label>
+                                    <input type="address" class="form-control" name="state" value="{{ $userInfo->state }}" minlength="8" maxlength="90" id="state" placeholder="Enter state" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="exampleInputEmail1">Country</label>
+                                    <input type="text" class="form-control" name="country" value="{{ $userInfo->country }}" minlength="3" maxlength="90" id="country" placeholder="Enter country" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="exampleInputPassword1">ZIP/Postal</label>
+                                    <input type="address" class="form-control" name="post_code" value="{{ $userInfo->post_code }}" minlength="8" maxlength="90" id="post_code" placeholder="Enter postal code" required>
                                 </div>
                             </div>
                         </div>
@@ -167,7 +195,6 @@
                     <div class="timeline-footer">
                         <button type="submit" class="btn btn-success" id="complete-order"><i class="fa fa-credit-card"></i> Submit Payment
                         </button>
-                        <!-- <button type="submit" class="btn btn-success btn-md">Pay</button>   -->
                     </div>
                 </form>
             </li>
@@ -269,18 +296,56 @@ card.addEventListener('change', function(event) {
 
 // Handle form submission.
 var form = document.getElementById('payment-form');
-form.addEventListener('submit', function(event) {
+form.addEventListener('submit', function(event) 
+{
   event.preventDefault();
+  // Validation
+  var name = document.forms["payment-form"]["name_on_card"].value;
+  var street = document.forms["payment-form"]["street"].value;
+  var city = document.forms["payment-form"]["city"].value;
+  var state = document.forms["payment-form"]["state"].value;
+  var country = document.forms["payment-form"]["country"].value;
+  var post_code = document.forms["payment-form"]["post_code"].value;
+  if (name == "" || name.length < 3) {
+    alert("Please enter card-holder name!");
+    return false;
+  }
+  else if (street == "" || street.length < 4) {
+    alert("Please enter street address!");
+    return false;
+  }
+  else if (city == "" || city.length < 4) {
+    alert("Please enter your city!");
+    return false;
+  }
+  else if (state == "" || state.length < 4) {
+    alert("Please enter your state!");
+    return false;
+  }
+  else if (country == "" || country.length < 4) {
+    alert("Please enter your country!");
+    return false;
+  }
+  else if (post_code == "" || post_code.length < 4) {
+    alert("Please enter your postal address!");
+    return false;
+  }
+
+
+
 
   // Disable the submit button to prevent double clicks
   document.getElementById('complete-order').disabled = true;
 
     var options = {
         name: document.getElementById('name_on_card').value,
-        name: document.getElementById('address').value,
-        // name: document.getElementById('city').value,
-        // name: document.getElementById('province').value,
-        // name: document.getElementById('postalcode').value,
+        address:{
+            line1: document.getElementById('street').value,
+            city: document.getElementById('city').value,
+            state: document.getElementById('state').value,
+            postal_code: document.getElementById('post_code').value,
+        },
+
     }
 
   stripe.createToken(card, options).then(function(result) {

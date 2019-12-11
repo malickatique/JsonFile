@@ -72,6 +72,7 @@ Route::group(['middleware' => ['checkRole:user']], function () {
         session([
             'total_files' => null,
             'files' => null,
+            'file_status' => 0,
         ]);
         session()->save();
         

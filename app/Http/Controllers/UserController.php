@@ -61,26 +61,30 @@ class UserController extends Controller
     }
     public function user_payment_index()
     {
-        
         // dd( session()->all() );
         if( session('file_status') == '5' )
         {   
             $files = session('files');
             $cost = 0;
+            $ind=1;
             foreach ($files as $filesIndex => $file) 
             {
-                $fileInfo[$filesIndex+1]['file_name'] = $files[$filesIndex]['file_name'];
-                $fileInfo[$filesIndex+1]['file_size'] = $files[$filesIndex]['file_size'];
-                $fileInfo[$filesIndex+1]['file_price'] = $files[$filesIndex]['file_price'];
+                $fileInfo[$ind]['file_name'] = $files[$filesIndex]['file_name'];
+                $fileInfo[$ind]['file_size'] = $files[$filesIndex]['file_size'];
+                $fileInfo[$ind]['file_price'] = $files[$filesIndex]['file_price'];
                 $cost += (float) $files[$filesIndex]['file_price'];
+                $ind++;
             }
             $fileInfo[0]['total_files'] = session('total_files');
             $fileInfo[0]['total_cost'] = $cost;
+            $user = User::find( Auth::id() );
+            $userInfo = UserInfo::where('user_id', Auth::id())->first();
             session([
                 'total_cost' => $cost,
             ]);
+            // dd( $fileInfo );
             session()->save();
-            return view('user.pay-for-it')->with('fileInfo', $fileInfo);
+            return view('user.pay-for-it')->with( compact('fileInfo', 'user', 'userInfo') );
         }
         else
         {
@@ -97,6 +101,7 @@ class UserController extends Controller
 
         $files = session('files');
         $fileIds = session('fileIds');
+        $index = 0;
         foreach ($fileIds as $key => $value) 
         {
             // dd( $fileIds );
@@ -106,9 +111,11 @@ class UserController extends Controller
             $fileInfo = CloudFiles::where('id', '=', $file_id)->first();
             $cloud = CloudSettings::first();
     
+
             $download_url = Storage::disk($cloud->disk_name)->url('output/'.$files[$key]['file_name'], $fileInfo->file_name);
-            $file[$key] = $fileInfo;
-            $file[$key]['download_url'] = $download_url;
+            $file[$index] = $fileInfo;
+            $file[$index]['download_url'] = $download_url;
+            $index++;
         }
         // dd($file);
         return view('user.download')->with('file', $file);
@@ -134,7 +141,7 @@ class UserController extends Controller
                 ]);
                 
                 $files = session('files');
-                $fileIds[] = '';
+                $fileIds = null;
 
                 foreach ($files as $key => $value) 
                 {   
@@ -159,7 +166,7 @@ class UserController extends Controller
 
                     $userInfo = UserInfo::where('user_id', $id)->first();
                     
-                    $userInfo->total_spent = (float)$userInfo->total_spent + $files[$key]['file_price'] ;
+                    $userInfo->total_spent = (float)$userInfo->total_spent + (float)$files[$key]['file_price'] ;
                     $userInfo->save();
 
                     $fileIds[$key] = $file->id;
@@ -187,6 +194,15 @@ class UserController extends Controller
     }
     public function getMultipleFiles(Request $request)
     {   
+        if( session('touch') )
+        {
+            session([
+                'files' => null,
+                'touch' => false,
+                'total_files' => 0,
+            ]);
+            session()->save();
+        }
         $data = array( "hasWarnings" => false, "isSuccess" => false, "warnings" => array(), "files" => array() );
 
         $file = $request->file('files')[0];
@@ -219,7 +235,7 @@ class UserController extends Controller
             if($isStore)
             {
                 $data['isSuccess'] = true;
-                if( session('total_files') != NULL  )
+                if( session('total_files') != NULL )
                 {
                     session([
                         'total_files' => session('total_files')+1,
@@ -258,15 +274,11 @@ class UserController extends Controller
     }
     public function fileRemoved(Request $request)
     {
+        session('files');
+        
         if( session('total_files') == NULL || session('total_files') == 0)
         {
             exit;
-        }
-        if( session('total_files') != NULL )
-        {
-            session([
-                'total_files' => session('total_files')-1,
-            ]);
         }
         $file_name = Auth::id().'-'.$request->file;
         $files = session('files');
@@ -281,7 +293,12 @@ class UserController extends Controller
                     //delete this particular object from the $array
                     unset($files[$elementKey]);
                     session()->forget('files');
-                    session()->push('files', $files);
+                    session()->save();
+                    session([
+                        'total_files' => session('total_files')-1,
+                        'files'=> $files,
+                    ]);
+                    session()->save();
                     // Delete from server/temp
                     $isDelete = Storage::disk('local')->delete('temp/'.Auth::id().'/'.$file_name);
                 } 
@@ -291,6 +308,11 @@ class UserController extends Controller
     }
     public function processFile(Request $request)       // File Upload Processing
     {
+        session([
+            'touch' => true,
+        ]);
+        session()->save();
+        
         if( session('total_files') == 0 || session('total_files') == NULL )
         {   
             return Redirect::back()->withErrors('Please upload a file!', 'file');
@@ -318,6 +340,8 @@ class UserController extends Controller
 
         $files = session('files');
     
+        // dd( session()->all() );
+
         foreach ($files as $filesIndex => $file) 
         {
             $set_file_name = $files[$filesIndex]['file_name'];
@@ -463,7 +487,7 @@ class UserController extends Controller
         {
             $bytes = '0 bytes';
         }
-
+        
         return $bytes;
     }
     public function getPrice($bytes)
@@ -472,8 +496,13 @@ class UserController extends Controller
         $cloud = CloudSettings::first();
         $price_per_mb = $cloud->price_per_mb;
         $price = 0;
-        $bytes = number_format($bytes / 1048576, 5); // 1048576 bytes == 1 MB
+
+        $bytes = number_format($bytes / 1048576, 5); // 1048576 bytes == 1 MB        
+        $bytes = floatval(preg_replace("/[^-0-9\.]/","",$bytes));
+
         $price = number_format($bytes* $price_per_mb, 2);
+        $price = floatval(preg_replace("/[^-0-9\.]/","",$price));
+
         return $price;
     }
 
