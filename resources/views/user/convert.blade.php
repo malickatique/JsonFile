@@ -26,33 +26,37 @@
                     <h3 class="timeline-header"> Upload a Json file</h3>
                     
                     <div style="width:500px; margin: 5px 10px;">
-                        <input id="thefiles" type="file" name="files" accept=".json" multiple>
+                        <input id="thefiles" type="file" name="files" accept=".json" multiple required>
                     </div>
                     
                     <div class="timeline-footer">
                         <button type="submit" class="btn btn-primary btn-md"> Process my file </button>
                     </div>
-                    
                 </form>
             </li>
             <!-- END timeline item -->
             <!-- timeline item -->
-            @if( $errors->file->any() )
-                <li>
-                    <i class="fa fa-exclamation-circle bg-red"></i>
-                    <div class="timeline-item">
+            <li id='fileErrors'>
+                <i class="fa fa-exclamation-circle bg-red"></i>
+                <div class="timeline-item">
 
-                        <h3 class="timeline-header"> Error!! </h3>
+                    <h3 class="timeline-header"> <i class="fa  fa-exclamation-triangle text-red"></i> Error </h3>
 
-                        <div class="timeline-body">
-                            <h4> {{ $errors->file->first() }} </h4>
-                        </div>
-                        <div class="timeline-footer">
-                            <!-- <a class="btn btn-danger btn-flat btn-xs">View comment</a> -->
-                        </div>
+                    <div class="timeline-body">
+                        <!-- Show errors here -->
                     </div>
-                </li>
-                
+                </div>
+            </li>
+            @if( $errors->file->any() )
+            <li>
+                <i class="fa fa-exclamation-circle bg-red"></i>
+                <div class="timeline-item">
+                    <h3 class="timeline-header"> Error!! </h3>
+                    <div class="timeline-body">
+                        <h4> {{ $errors->file->first() }} </h4>
+                    </div>
+                </div>
+            </li>
             @endif
             <!-- END timeline item -->
 

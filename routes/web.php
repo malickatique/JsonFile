@@ -68,7 +68,15 @@ Route::group(['middleware' => ['checkRole:admin']], function () {
     Route::get('/admin-profile', function(){ return view('admin.profile'); })->name('admin.profile');
 });
 Route::group(['middleware' => ['checkRole:user']], function () {
-    Route::get('/user-file', function(){ return view('user.convert'); })->name('user.convert');
+    Route::get('/user-file', function(){ 
+        session([
+            'total_files' => null,
+            'files' => null,
+        ]);
+        session()->save();
+        
+        return view('user.convert'); 
+    })->name('user.convert');
 });
 
 

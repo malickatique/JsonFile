@@ -21,7 +21,9 @@ $(document).ready(function() {
 			start: true,
             synchron: true,
             beforeSend: null,
-            onSuccess: function(result, item) {
+			onSuccess: function(result, item) 
+			{	
+				$("#fileErrors").hide();
                 var data = {};
 				
 				try {
@@ -38,8 +40,10 @@ $(document).ready(function() {
 				
 				// if warnings
 				if (data.hasWarnings) {
-					for (var warning in data.warnings) {
-						alert(data.warnings);
+					for (var warning in data.warnings) 
+					{
+						$( ".timeline-body" ).append( '<h4>'+ data.warnings +'</h4>' );
+						$("#fileErrors").show();
 					}
 					
 					item.html.removeClass('upload-successful').addClass('upload-failed');
@@ -53,8 +57,9 @@ $(document).ready(function() {
                 setTimeout(function() {
                     item.html.find('.progress-bar2').fadeOut(400);
                 }, 400);
-            },
+			},
             onError: function(item) {
+
 				var progressBar = item.html.find('.progress-bar2');
 				
 				if(progressBar.length > 0) {

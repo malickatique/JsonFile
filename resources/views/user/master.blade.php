@@ -277,6 +277,9 @@
 		<script src="{{ asset('uploader/jquery.fileuploader.min.js') }}" type="text/javascript"></script>
 		<script src="{{ asset('uploader/custom.js') }}" type="text/javascript"></script>
 
+<script>
+  $("#fileErrors").hide();
+</script>
 
 <script>
   $(document).ready(function () {

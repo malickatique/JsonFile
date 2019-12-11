@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 use Hash;
+use App\Libraries\FileUploader;
 use App\User;
 use App\Payment;
 use App\UserInfo;
@@ -58,80 +59,27 @@ class UserController extends Controller
         $info['total_spent'] = $total_spent;
         return view('user.index')->with('files', $files)->with('info', $info);
     }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\User  $user
-     * @return \Illuminate\Http\Response
-     */
-    public function show(User $user)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\User  $user
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(User $user)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\User  $user
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, User $user)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\User  $user
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(User $user)
-    {
-        //
-    }
     public function user_payment_index()
     {
+        
         // dd( session()->all() );
         if( session('file_status') == '5' )
         {   
-            $fileInfo['file_name'] = session('file_name');
-            $fileInfo['file_size'] = session('file_size');
-            $fileInfo['file_price'] = session('file_price');
+            $files = session('files');
+            $cost = 0;
+            foreach ($files as $filesIndex => $file) 
+            {
+                $fileInfo[$filesIndex+1]['file_name'] = $files[$filesIndex]['file_name'];
+                $fileInfo[$filesIndex+1]['file_size'] = $files[$filesIndex]['file_size'];
+                $fileInfo[$filesIndex+1]['file_price'] = $files[$filesIndex]['file_price'];
+                $cost += (float) $files[$filesIndex]['file_price'];
+            }
+            $fileInfo[0]['total_files'] = session('total_files');
+            $fileInfo[0]['total_cost'] = $cost;
+            session([
+                'total_cost' => $cost,
+            ]);
+            session()->save();
             return view('user.pay-for-it')->with('fileInfo', $fileInfo);
         }
         else
@@ -146,20 +94,22 @@ class UserController extends Controller
         {
             return redirect(route('user.convert'));
         }
-        // else if( session('file_status') == '4' )
-        // {
-        //     return redirect(route('user.payment'));
-        // }
 
-        $file_id= session('file_id');
-        $id = Auth::user()->id;
-
-        $fileInfo = CloudFiles::where('id', '=', $file_id)->first();
-        $cloud = CloudSettings::first();
-
-        $download_url = Storage::disk($cloud->disk_name)->url('output/'.session('file_name'), $fileInfo->file_name);
-        $file = $fileInfo;
-        $file['download_url'] = $download_url;
+        $files = session('files');
+        $fileIds = session('fileIds');
+        foreach ($fileIds as $key => $value) 
+        {
+            // dd( $fileIds );
+            $file_id= $fileIds[$key];
+            $id = Auth::user()->id;
+    
+            $fileInfo = CloudFiles::where('id', '=', $file_id)->first();
+            $cloud = CloudSettings::first();
+    
+            $download_url = Storage::disk($cloud->disk_name)->url('output/'.$files[$key]['file_name'], $fileInfo->file_name);
+            $file[$key] = $fileInfo;
+            $file[$key]['download_url'] = $download_url;
+        }
         // dd($file);
         return view('user.download')->with('file', $file);
     }
@@ -171,7 +121,7 @@ class UserController extends Controller
             try {
                 //charge user...
                 $charge = Stripe::charges()->create([
-                    'amount' => (float)session('file_price'),
+                    'amount' => (float)session('total_cost'),
                     'currency' => 'USD',    // UK Dollar GBP
                     'source' => $request->stripeToken,
                     'description' => 'Order',
@@ -183,39 +133,44 @@ class UserController extends Controller
                     ],
                 ]);
                 
-                // Success 
-                $id = Auth::user()->id;
-                $file = new CloudFiles;
-                $file->user_id = $id;
-                $file->file_name = session('file_name');
-                $file->status = '6';
-                $file->file_size = session('file_size');
-                $file->cost = session('file_price');
-                $file->save();
+                $files = session('files');
+                $fileIds[] = '';
 
-                // Payment invoice record
-                $payment = new Payment;
-                $payment->user_id = $id;
-                $payment->file_id = $file->id;
-                $payment->name_on_card = $request->name_on_card;
-                $payment->address = $request->address;
-                $payment->cost = session('file_price');
-                $payment->save();
+                foreach ($files as $key => $value) 
+                {   
+                    // Success 
+                    $id = Auth::user()->id;
+                    $file = new CloudFiles;
+                    $file->user_id = $id;
+                    $file->file_name = $files[$key]['file_name'];
+                    $file->status = '6';
+                    $file->file_size = $files[$key]['file_size'];
+                    $file->cost = $files[$key]['file_price'];
+                    $file->save();
 
-                $userInfo = UserInfo::where('user_id', $id)->first();
-                
-                $userInfo->total_spent = (float)$userInfo->total_spent + (float)session('file_price') ;
-                $userInfo->save();
+                    // Payment invoice record
+                    $payment = new Payment;
+                    $payment->user_id = $id;
+                    $payment->file_id = $file->id;
+                    $payment->name_on_card = $request->name_on_card;
+                    $payment->address = $request->address;
+                    $payment->cost = $files[$key]['file_price'];
+                    $payment->save();
+
+                    $userInfo = UserInfo::where('user_id', $id)->first();
+                    
+                    $userInfo->total_spent = (float)$userInfo->total_spent + $files[$key]['file_price'] ;
+                    $userInfo->save();
+
+                    $fileIds[$key] = $file->id;
+                }
 
                 session([
                     'comment' => 'payment compelted',
-                    'file_id' => $file->id,
+                    'file_status' => 6,
+                    'fileIds' => $fileIds,
                 ]);
-
-                session([
-                    'file_status' => '6',
-                    'comment' => 'user has been charged!!'
-                ]);
+                session()->save();
 
                 return Redirect::route('user.download');
     
@@ -231,56 +186,89 @@ class UserController extends Controller
 
     }
     public function getMultipleFiles(Request $request)
-    {
+    {   
+        $data = array( "hasWarnings" => false, "isSuccess" => false, "warnings" => array(), "files" => array() );
+
         $file = $request->file('files')[0];
         // Set File name
-        $set_file_name = Auth::user()->email .'-'. $file->getClientOriginalName();
+        $set_file_name = Auth::id().'-'.$file->getClientOriginalName();
         $file_size = $file->getSize();
 
-        // Move files to temp
-        // $file->storeAs('temp', $set_file_name);
-        $isStore = Storage::disk('local')->put('temp/'.$set_file_name, $file);
-        if($isStore)
+        if($file->getClientOriginalExtension() != 'json')
+        {   
+            $data['isSuccess'] = false;
+            $data['hasWarnings'] = true;
+            $data['warnings'][] = 'Please upload a json file!';
+            echo json_encode($data);
+            exit;
+            // return Redirect::back()->withErrors('Please upload a json file!', 'file');
+        }
+        else if( (float)$file_size < 0.50)
         {
-            if( session('total_files') != NULL  )
-            {
-                session([
-                    'total_files' => session('total_files')+1,
-                ]);
-            }
-            else
-            {
-                session([
-                    'total_files' => 1,
-                ]);
-            }
-    
-            session()->push('files', [
-                'file_name' => $set_file_name,
-                'file_location' => 'server temp',
-                'file_size' => $this->getFileSize($file_size),  // size in KB, MB etc
-                'file_price' => $this->getPrice($file_size),
-                'file_status' => '0',
-                'user_id' => Auth::user()->id,
-            ]);
+            $data['isSuccess'] = false;
+            $data['hasWarnings'] = true;
+            $data['warnings'][] = 'Your file does not have enough content!';
+            echo json_encode($data);
+            exit;
+            // return Redirect::back()->withErrors('Your file does not have enough content!', 'file');
         }
         else
         {
-            return false;
+            // Move files to temp
+            $isStore = Storage::disk('local')->putFileAs('temp/'.Auth::id(), $file, $set_file_name);
+            if($isStore)
+            {
+                $data['isSuccess'] = true;
+                if( session('total_files') != NULL  )
+                {
+                    session([
+                        'total_files' => session('total_files')+1,
+                    ]);
+                }
+                else
+                {
+                    session([
+                        'total_files' => 1,
+                        'file_status' => 0,
+                    ]);
+                }
+                session()->push('files', [
+                    'file_name' => $set_file_name,
+                    'file_location' => 'server temp',
+                    'file_size' => $this->getFileSize($file_size),  // size in KB, MB etc
+                    'file_price' => $this->getPrice($file_size),
+                    'file_status' => '0',
+                    'user_id' => Auth::user()->id,
+                ]);
+                session()->save();
+            }
+            else
+            {
+                $data['isSuccess'] = false;
+                $data['hasWarnings'] = true;
+                $data['warnings'][] = 'An error occurred uploading your file!';
+                echo json_encode($data);
+                exit;
+                // return $file = 'Please upload a json file!';
+            }
         }
-        
-        return session()->all();
-        
+
+        echo json_encode($data);
+        exit;
     }
     public function fileRemoved(Request $request)
     {
+        if( session('total_files') == NULL || session('total_files') == 0)
+        {
+            exit;
+        }
         if( session('total_files') != NULL )
         {
             session([
                 'total_files' => session('total_files')-1,
             ]);
         }
-        $file_name = Auth::user()->email.'-'.$request->file;
+        $file_name = Auth::id().'-'.$request->file;
         $files = session('files');
 
         foreach($files as $elementKey => $element) 
@@ -295,7 +283,7 @@ class UserController extends Controller
                     session()->forget('files');
                     session()->push('files', $files);
                     // Delete from server/temp
-                    $isDelete = Storage::disk('local')->delete('temp/'.$file_name);
+                    $isDelete = Storage::disk('local')->delete('temp/'.Auth::id().'/'.$file_name);
                 } 
             }
         }
@@ -303,21 +291,12 @@ class UserController extends Controller
     }
     public function processFile(Request $request)       // File Upload Processing
     {
-        dd('uploaded files');
-
-        if($request->file_name->getClientOriginalExtension() != 'json')
-        {        
-            return Redirect::back()->withErrors('Please upload a json file!', 'file');
+        if( session('total_files') == 0 || session('total_files') == NULL )
+        {   
+            return Redirect::back()->withErrors('Please upload a file!', 'file');
         }
-        else if( $this->getPrice( $request->file_name->getSize() ) < 0.50)
-        {
-            return Redirect::back()->withErrors('Your file does not have enough content!', 'file');
-        }
-        // Store file info in session
-        $this->setFileSession($request);
-
         // Upload file to Cloud/input
-        $this->uploadToCloudInput($request);
+        $this->uploadToCloudInput();
         
         // Move file to Server/input
         $this->moveFileToServerInput();
@@ -325,128 +304,122 @@ class UserController extends Controller
         // Process File
         $this->mainFileProcessing();
 
-        // Move to server/output folder
-        $this->moveFileToServerOutput();
-
         // Upload file to Cloud
         $this->uploadToCloudOutput();
 
         // Generate Download link
-
         return Redirect::route('user.payment');
         
     }
-    // File uploading to cloud
-    public function setFileSession(Request $request)
-    {
-        // dd(session()->all());
-        $file = $request->file('file_name');
-        
-        // Set File name
-        $set_file_name = 'JsonFile'.uniqid().'.'.$file->getClientOriginalExtension();
-        $file_size = $file->getSize();
-
-        // Set session
-        // $request->session()->put('key', 'val')
-        session([
-            'file_name' => $set_file_name,
-            'file_location' => 'cloud input',
-            'file_size' => $this->getFileSize($file_size),  // size in KB, MB etc
-            'file_price' => $this->getPrice($file_size),
-            'file_status' => '0',
-            'user_id' => Auth::user()->id,
-            'comment' => 'setting session',
-        ]);
-    }
-    public function uploadToCloudInput(Request $request)
+    public function uploadToCloudInput()
     {
         // initialize variables
         $cloud = CloudSettings::first();
-        $file = $request->file('file_name');
 
-        // Set File name
-        $set_file_name = session('file_name');
+        $files = session('files');
     
-        // $is_file_upload = Storage::disk('dropbox')->putFileAs('path', $fileToUpload, 'fileName.jpg');
-        $result = Storage::disk($cloud->disk_name)->putFileAs('input', $file, $set_file_name);
-        if($result)
+        foreach ($files as $filesIndex => $file) 
         {
-            session([
-                'file_status' => '1',
-                'comment' => 'file uploaded to cloud..',
-            ]);
+            $set_file_name = $files[$filesIndex]['file_name'];
+            
+            // Get file from server/temp
+            $fileContents = Storage::disk('local')->get('temp/'.Auth::id().'/'.$set_file_name);
+
+            // Move to "cloud/input" folder
+            $result = Storage::disk($cloud->disk_name)->put('input/'. $set_file_name, $fileContents);
+
+            // Delete file from server temp
+            $isDelete = Storage::disk('local')->delete('temp/'.Auth::id().'/'.$set_file_name);
+
+            if($result)
+            {
+                session([
+                    // 'file_status' => '1',
+                    'comment' => 'files uploaded to cloud input..',
+                ]);
+            }
         }
-        
     }
     public function moveFileToServerInput()
     {
         $cloud = CloudSettings::first();
 
-        // Get file from cloud
-        $fileContents = Storage::disk($cloud->disk_name)->get('input/'.session('file_name'));
+        $files = session('files');
 
-        // Move to "storage/input" folder
-        $isStore = Storage::disk('local')->put('input/'.session('file_name'), $fileContents);
+        foreach ($files as $filesIndex => $file) 
+        {
+            $set_file_name = $files[$filesIndex]['file_name'];
 
-        // Delete from cloud
-        $isDelete = Storage::disk($cloud->disk_name)->delete('input/'.session('file_name'));
+            // Get file from cloud
+            $fileContents = Storage::disk($cloud->disk_name)->get('input/'.$set_file_name);
 
-        session([
-            'file_status' => '2',
-            'comment' => 'fie moved to server input folder'
-        ]);
-        
+            // Move to "storage/input" folder
+            $isStore = Storage::disk('local')->put('input/'.$set_file_name, $fileContents);
+
+            // Delete from cloud
+            $isDelete = Storage::disk($cloud->disk_name)->delete('input/'.$set_file_name);
+
+            session([
+                'comment' => 'fie moved to server input folder'
+            ]);
+        }
     }
     public function mainFileProcessing()
     {
         
-        
-        // Get file from local input
-        $fileContents = Storage::disk('local')->get('input/'.session('file_name'));
-        // Perform file processing here
+        $files = session('files');
+    
+        foreach ($files as $filesIndex => $file) 
+        {
+            $set_file_name = $files[$filesIndex]['file_name'];
 
-        // 
-        session([
-            // 'file_size' => '', // Update file size after processing here
-            'file_status' => '3',
-            'comment' => 'file_processed in server'
-        ]);
+            // Get file from local input
+            $fileContents = Storage::disk('local')->get('input/'.$set_file_name);
+            // Perform file processing here
 
-    }
-    public function moveFiletoServerOutput()
-    {
-        // Get file server/input
-        $fileContents = Storage::disk('local')->get('input/'.session('file_name'));
+            // processing.......
 
-        // Move to "storage/output" folder
-        $isStore = Storage::disk('local')->put('output/'.session('file_name'), $fileContents);
 
-        // Delete from server/input
-        $isDelete = Storage::disk('local')->delete('input/'.session('file_name'));
+            // Move to "storage/output" folder
+            $isStore = Storage::disk('local')->put('output/'.$set_file_name, $fileContents);
 
-        session([
-            'file_status' => '4',
-            'comment' => 'file moved to server output folder'
-        ]);
+            // Delete from server/input
+            $isDelete = Storage::disk('local')->delete('input/'.$set_file_name);
+
+            session([
+                'comment' => 'file_processed in server'
+            ]);
+        }
+
     }
     public function uploadToCloudOutput()
     {
-
+        // initialize variables
         $cloud = CloudSettings::first();
 
-        // Get file from server/output
-        $fileContents = Storage::disk('local')->get('output/'.session('file_name'));
+        $files = session('files');
+    
+        foreach ($files as $filesIndex => $file) 
+        {
+            $set_file_name = $files[$filesIndex]['file_name'];
+            
+            // Get file from server/output
+            $fileContents = Storage::disk('local')->get('output/'.$set_file_name);
 
-        // Move to "cloud/output" folder
-        $result = Storage::disk($cloud->disk_name)->put('output/'. session('file_name'), $fileContents);
+            // Move to "cloud/output" folder
+            $result = Storage::disk($cloud->disk_name)->put('output/'. $set_file_name, $fileContents);
 
-        // Delete from server/output
-        $isDelete = Storage::disk('local')->delete('output/'.session('file_name'));
+            // Delete from server/output
+            $isDelete = Storage::disk('local')->delete('output/'. $set_file_name);
 
-        session([
-            'comment' => 'file moved to cloud output folder',
-            'file_status' => '5',
-        ]);
+            if($result)
+            {
+                session([
+                    'file_status' => '5',
+                    'comment' => 'files uploaded to cloud output..',
+                ]);
+            }
+        }
     }
     public function getDownloadLink($file_id)
     {
@@ -463,18 +436,6 @@ class UserController extends Controller
                 $headers));
 
         // dd('here');
-    }
-    public  function test()
-    {        
-        $fileInfo = CloudFiles::find(1);
-        // $fileInfo = CloudFiles::where('id', '=', $file_id)->first();
-
-        $cloud = CloudSettings::first();
-
-        $download_url = Storage::disk($cloud->disk_name)->url('output/'.$fileInfo->file_name, $fileInfo->file_name);
-
-        return $download_url;
-
     }
     public function getFileSize($bytes)
     {

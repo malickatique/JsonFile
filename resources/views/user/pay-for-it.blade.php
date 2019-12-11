@@ -122,9 +122,18 @@
                     <h3 class="timeline-header"> Payment Method</h3>
 
                     <div class="timeline-body">
-                        <h4> File Name: {{ $fileInfo['file_name'] }} </h4>
-                        <h4> File Size: {{ $fileInfo['file_size'] }} </h4>
-                        <h4> Total Price: {{ $fileInfo['file_price'] }} $</h4> <br>
+                        
+                        <h4> Total Files: {{ $fileInfo[0]['total_files'] }} </h4>
+                        <h4> Total Cost: {{ $fileInfo[0]['total_cost'] }} $</h4>
+                        <hr>
+                        @for( $i=1 ; $i <= $fileInfo[0]['total_files']; $i++)
+                            <h4> File# {{ $i }} </h4>
+                            <h4> File Name: {{ $fileInfo[$i]['file_name'] }}</h4>
+                            <h4> File Size: {{ $fileInfo[$i]['file_size'] }} </h4>
+                            <h4> File Costed: {{ $fileInfo[$i]['file_price'] }}  $</h4>
+                            <hr>
+                        @endfor
+
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">

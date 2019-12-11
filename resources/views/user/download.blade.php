@@ -135,21 +135,22 @@
                 <i class="fa fa-arrow-circle-down bg-yellow"></i>
                 <form method="get" action="#" enctype="multipart/form-data" class="timeline-item">
                     @csrf
-                    <h3 class="timeline-header"> Download your file</h3>
+                    <h3 class="timeline-header"> Download your file(s)</h3>
 
+                    @foreach( $file as $key => $value )
                     <div class="timeline-body">
                         <div class="row">
                             <div class="col-md-3">
                                 <span class="mailbox-attachment-icon"><i class="fa fa-file-code-o"></i></span>
 
                                 <div class="mailbox-attachment-info">
-                                    <a href="{{ $file->download_url }}" class="mailbox-attachment-name"><i class="fa fa-paperclip"></i>
+                                    <a href="{{ $file[0]['download_url'] }}" class="mailbox-attachment-name"><i class="fa fa-paperclip"></i>
                                         <div class="limited-txt">    
-                                            {{ $file->file_name }}
+                                            {{ $file[$key]['file_name'] }}
                                         </div>
                                     </a>
                                     <span class="mailbox-attachment-size">
-                                        {{ $file->file_size }}
+                                        {{ $file[$key]['file_size'] }}
                                         <!-- <a href="#" class="btn btn-default btn-xs pull-right"><i class="fa fa-cloud-download"></i></a> -->
                                     </span>
                                 </div>
@@ -157,8 +158,10 @@
                         </div>
                     </div>
                     <div class="timeline-footer">
-                        <a href="{{ $file->download_url }}" class="btn btn-warning btn-flat btn-xs">Download</a>
+                        <a href="{{ $file[$key]['download_url'] }}" class="btn btn-warning btn-flat btn-xs">Download</a>
                     </div>
+                    <hr>
+                    @endforeach
                 </form>
             </li>
             <!-- END timeline item -->
