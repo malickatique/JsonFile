@@ -94,5 +94,8 @@ Route::get('/getStates/{id}','Controller@geStates');
 Route::get('/getCities/{id}','Controller@geCities');
 
 
+Route::post('/delete-a-file', 'AdminController@del_a_file')->name('del.a.file');
+Route::post('/delete-all-files', 'AdminController@del_all_files')->name('del.all.files');
+
 // Site Content Settings
 Route::post('/change-content', 'ContentController@change_content')->name('content.change');

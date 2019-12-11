@@ -232,7 +232,15 @@ class AdminController extends Controller
     }
     public function cloud_index()
     {
-        $cloud = CloudSettings::first();
+        $cloud['cloud'] = CloudSettings::first();
+
+        $files_in_cloud_input = Storage::disk($cloud['cloud']->disk_name)->allFiles('input');
+        $files_in_cloud_output = Storage::disk($cloud['cloud']->disk_name)->allFiles('output');
+        
+        $data['files_in_cloud_input'] = $files_in_cloud_input;
+        $data['files_in_cloud_output'] = $files_in_cloud_output;
+        $cloud['cloud_folder'] = $data;
+
         return view('admin.cloud-settings')->with('cloud', $cloud);
     }
     public function cloud_token(Request $request)
@@ -264,8 +272,67 @@ class AdminController extends Controller
     }
     public function site_settings()
     {
-        $site = SiteSettings::first();
+        $cloud = CloudSettings::first();
+        
+        $files_in_server_temp = Storage::disk('local')->allFiles('temp');
+        $files_in_server_input = Storage::disk('local')->allFiles('input');
+        $files_in_server_output = Storage::disk('local')->allFiles('output');
+        
+        $data['files_in_server_temp'] = $files_in_server_temp;
+        $data['files_in_server_input'] = $files_in_server_input;
+        $data['files_in_server_output'] = $files_in_server_output;
+        $site['folder'] = $data;
+        $site['site'] = SiteSettings::first();
+
+        // dd( $site );
         return view('admin.site-settings')->with('site', $site);
+    }
+    public function del_a_file(Request $request)
+    {
+
+        dd( $request->all() );
+
+        $place = $request->place;
+        $folder = $request->folder;
+        $file = $request->file;
+
+        $ind=0;
+        $dir = '';
+        $flag =0;
+        $name = '';
+        $in=0;
+        for($i=0; $i<strlen($file); $i++)
+        {
+            if($file[$i] == '/' && $flag==0)
+            {
+                $flag = 1;
+            }
+            else if($file[$i] == '/' && $flag==1)
+            {
+                $flag=2;
+            }
+            if($flag ==1 && $file[$i]!='/')
+            {
+                $dir[$ind++] = $file[$i];
+            }
+            if($flag==2 && $file[$i]!='/')
+            {
+                $name[$in++] = $file[$i];
+            }
+        }
+        $isDelete = Storage::disk($place)->delete( $folder.'/'.$dir.'/'.$name);
+        return Redirect::back();
+    }
+    public function del_all_files(Request $request)
+    {
+        dd( $request->all() );
+        
+        $place = $request->place;
+        $folder = $request->folder;
+
+        $files = Storage::allFiles($folder);
+        $isDelete = Storage::disk($place)->delete($files);
+        return Redirect::back();
     }
     public function site_name(Request $request)
     {
