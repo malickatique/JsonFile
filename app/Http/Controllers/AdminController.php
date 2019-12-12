@@ -37,7 +37,7 @@ class AdminController extends Controller
         foreach ($files as $file) {
             if($file->status == '6')
             {
-                $total_earning += $file->cost;
+                $total_earning += (float)$file->cost;
             }
         }
 
