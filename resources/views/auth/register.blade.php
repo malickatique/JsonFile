@@ -106,14 +106,8 @@
                         <div class="form-group row">
                             <label for="name" class="col-md-4 col-form-label text-md-right">{{ __('Country/Region') }}</label>
                             <div class="col-md-6">
-                                <select class="form-control" name="country" id="country" required>
-                                    <option value="">Select Country</option>
-                                    @foreach ($countries as $country) 
-                                        <option value="{{ $country->id }}">
-                                            {{ $country->country_name }}
-                                        </option>
-                                    @endforeach
-                                </select>
+                                <input id="country" type="text" class="form-control @error('name') is-invalid @enderror" name="country" 
+                                value="{{ old('country') }}" required autocomplete="country" autofocus minlength="5" maxlength="30" required>
                             </div>
                         </div>
 
@@ -121,18 +115,16 @@
                         <div class="form-group row">
                             <label for="name" class="col-md-4 col-form-label text-md-right">{{ __('State/Province') }}</label>
                             <div class="col-md-6">
-                                <select class="form-control" name="state" id="state" required>
-                                    <!-- <option value="">Select State</option> -->
-                                </select>
+                                <input id="state" type="text" class="form-control @error('name') is-invalid @enderror" name="state" 
+                                value="{{ old('state') }}" required autocomplete="state" autofocus minlength="5" maxlength="30" required>
                             </div>
                         </div>
 
                         <div class="form-group row">
                             <label for="name" class="col-md-4 col-form-label text-md-right">{{ __('Town or City') }}</label>
                             <div class="col-md-6">
-                                <select class="form-control" name="city" id="city" required>
-                                    <!-- <option value="">Select City</option> -->
-                                </select>
+                                <input id="city" type="text" class="form-control @error('name') is-invalid @enderror" name="city" 
+                                value="{{ old('city') }}" required autocomplete="city" autofocus minlength="5" maxlength="30" required>
                             </div>
                         </div>
 

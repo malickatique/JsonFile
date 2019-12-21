@@ -25,6 +25,7 @@ class AdminController extends Controller
      */
     public function __construct()
     {
+        set_time_limit(6000);
         //Specify required role for this controller here in checkRole:xyz
         $this->middleware(['auth', 'checkRole:admin', 'verified']); 
     }

@@ -82,39 +82,34 @@ class RegisterController extends Controller
             $user = User::create([
                 'name' => $data['name'],
                 'email' => $data['email'],
-                'type' => $data['type'],
-                'company_name' => $data['company_name'],
-                'position' => $data['position'],
                 'password' => Hash::make($data['password']),
-
-                // Address
-                'street' => $data['street'],
-                'country' => $country[0],
-                'state' => $state[0],
-                'city' => $city[0],
-                'post_code' => $data['post_code'],
             ]);
             $userInfo = new UserInfo;
+            $userInfo->user_id = $user->id;
             $userInfo->street = $data['street'];
-            $userInfo->country = $country[0];
-            $userInfo->state = $state[0];
-            $userInfo->city = $city[0];
+            $userInfo->type = $data['type'];
+            $userInfo->type = $data['company_name'];
+            $userInfo->type = $data['position'];
+            $userInfo->country = $data['country'];
+            $userInfo->state = $data['state'];
+            $userInfo->city = $data['city'];
             $userInfo->post_code = $data['post_code'];
             $userInfo->save();
             return $user;
         }
         else{
-            return User::create([
+            $user = User::create([
                 'name' => $data['name'],
                 'email' => $data['email'],
-                'type' => $data['type'],
                 'password' => Hash::make($data['password']),
             ]);
             $userInfo = new UserInfo;
+            $userInfo->user_id = $user->id;
             $userInfo->street = $data['street'];
-            $userInfo->country = $country[0];
-            $userInfo->state = $state[0];
-            $userInfo->city = $city[0];
+            $userInfo->type = $data['type'];
+            $userInfo->country = $data['country'];
+            $userInfo->state = $data['state'];
+            $userInfo->city = $data['city'];
             $userInfo->post_code = $data['post_code'];
             $userInfo->save();
             return $user;
