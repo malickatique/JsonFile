@@ -172,7 +172,7 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="exampleInputPassword1">ZIP/Postal</label>
-                                    <input type="address" class="form-control" name="post_code" value="{{ $userInfo->post_code }}" minlength="8" maxlength="90" id="post_code" placeholder="Enter postal code" required>
+                                    <input type="address" class="form-control" name="post_code" value="{{ $userInfo->post_code }}" minlength="4" maxlength="90" id="post_code" placeholder="Enter postal code" required>
                                 </div>
                             </div>
                         </div>

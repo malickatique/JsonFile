@@ -55,14 +55,23 @@ class RegisterController extends Controller
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => [
                 'required',
+                'confirmed',
                 'string',
                 'min:6',                 // must be at least 5 characters in length
-                // 'regex:/[a-z]/',      // must contain at least one lowercase letter
-                // 'regex:/[A-Z]/',      // must contain at least one uppercase letter
-                // 'regex:/[0-9]/',      // must contain at least one digit
-                // 'regex:/[@$!%*#?&]/', // must contain a special character
+                'regex:/[a-z]/',      // must contain at least one lowercase letter
+                'regex:/[A-Z]/',      // must contain at least one uppercase letter
+                'regex:/[0-9]/',      // must contain at least one digit
+                'regex:/[@$!%*#?&]/', // must contain a special character
             ],
-        ]);
+        ],
+        [
+            'name.required' => 'Please enter valid name',
+            'password.required' => 'Your password must be of 5 minimum character',
+            'password.confirmed' => 'Your password did not match',
+            'password.regex' => 'Your password must contain a letter (capital and small), a number and symbol',
+            'email.required' => 'Please enter a valid email',
+        ]
+    );
     }
 
     /**
